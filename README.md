@@ -36,7 +36,7 @@ Setup things for Python
 python -m venv venv                         # create a virtual environment
 source /venv/bin/activate                   # switches to the virtual environments python enterpreter
 python -m pip install --upgrade pip         # upgrades pip in virtual environment to latest version
-python setup.py install                     # installs required python packages
+python -m pip install -r requirements.txt   # installs required python packages
 ```
 
 # Run
