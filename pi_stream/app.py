@@ -4,16 +4,18 @@ import ffmpeg
 
 
 def main():
+
+    
+    if CONFIG.streaming_service == 'twitch':
+        url = f"rtmp://live.twitch.tv/app/{CONFIG.stream_key}"
+    elif CONFIG.streaming_service == 'youtube':
+        url = f"rtmp://a.rtmp.youtube.com/live2/{CONFIG.stream_key}"
+
     video_input = ffmpeg.input(
         filename='/dev/video0',
         input_format='mjpeg'
     )
 
-
-    if CONFIG.streaming_service == 'twitch':
-        url = f"rtmp://live.twitch.tv/app/{CONFIG.stream_key}"
-    elif CONFIG.streaming_service == 'youtube':
-        url = f"rtmp://a.rtmp.youtube.com/live2/{CONFIG.stream_key}"
 
     video_output = ffmpeg.output(
         video_input, 
@@ -29,6 +31,7 @@ def main():
         bufsize='6000k'
     )
 
+    ffmpeg.run(video_output, overwrite_output=True)
 
 
 if __name__ == '__main__':
