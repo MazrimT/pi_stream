@@ -40,14 +40,14 @@ python setup.py install                     # installs required python packages
 ```
 
 # Run
-* Put your Stream Key and API key in config/secrets.json  
-* set up the stream in config/stream_config.toml
-
-This can't actually run yet, but when it can the idea is to:
-this doesn't work yet, but idea is to do:
+Put your Stream Key, API key and stream config in the config/config.toml file  
+  
+This can't actually run yet, but when it can the idea is to:  
+this doesn't work yet, but idea is to do:  
 ```bash
 # in the virtual environment
 python pi_stream/app.py
 ```
-
-Eventually the idea will be that the app that controlls the touchscreen will start first and be in crontab as run on reboot.
+  
+Eventually the idea will be that the app that controlls the touchscreen will start first and be in crontab as run on reboot.  
+ 

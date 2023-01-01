@@ -1,8 +1,6 @@
 
 [secrets]
-stream_key = "abc"         # youtube stream key
-api_key = ""            # google api key
+stream_key = ""                      # youtube stream key
 
-[stream]
-title = "my test stream"            # name of the stream
-privacyStatus = "private"           # privacy on youtube, private/public
+[stream]                            
+streaming_service = 'twitch'            # youtube or twitch
