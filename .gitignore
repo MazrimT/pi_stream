@@ -21,7 +21,5 @@ images*
 
 # local test stuff
 *pytest.py*
-*record_video.py*
-*sample_code.py*
 *recordvideo.py*
 *samplecode.py*
