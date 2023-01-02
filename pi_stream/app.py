@@ -14,42 +14,53 @@ def main():
 
     logger.info(f'using url: {url}')
 
-    video_input = ffmpeg.input(
-        filename='/dev/video0',
-        input_format='mjpeg',
+    try:
+        video_input = ffmpeg.input(
+            filename='/dev/video0',
+            input_format='mjpeg',
 
-    )
+        )
+    except Exception as e:
+        logger.error("error setting up video input: %s", e)
 
-    audio_input = ffmpeg.input(
-        filename='anullsrc',
-        f='lavfi',
-       # i="anullsrc=r=48000:cl=mono",
-       # sample_rate='44100', # 16000
-     #   channel_layout='mono',
-      #  anullsrc="r=16000:cl=mono",
-        acodec="aac", 
-        #audio_bitrate="200k"
-    )
+    try:
+        audio_input = ffmpeg.input(
+            filename='anullsrc=sample_rate=48000:channel_layout=mono',
+            f='lavfi',
+        )
+    except Exception as e:
+        logger.error("error setting up audio input: %s", e)
 
-    video_output = ffmpeg.output(
-        video_input, 
-        audio_input,
-        filename=url, 
-        f='flv',
-        framerate='30',
-        vcodec='libx264',
-        preset='ultrafast',
-        tune='zerolatency',
-        video_size=(1920, 1080),
-        video_bitrate='4500k',
-        maxrate='5000k',
-        bufsize='6000k',
-        #threads=4,
 
-    ).global_args('-ignore_unknown').global_args('-dn').global_args('-sn')
+    try:
+        stream = ffmpeg.output(
+            audio_input,
+            video_input, 
+            filename=url, 
+            f='flv',
+            framerate='30',
+            vcodec='libx264',
+            acodec="aac", 
+            preset='ultrafast',
+            tune='zerolatency',
+            video_size=(1920, 1080),
+            video_bitrate='4500k',
+            audio_bitrate="128k",
+            maxrate='5000k',
+            bufsize='6000k',
+            threads=8,
+            ignore_unknown=None,
+            sn=None,
+            dn=None
 
-    ffmpeg.run(video_output, overwrite_output=True)
+        )
+    except Exception as e:
+        logger.error("error setting up stream output: %s", e)
 
+    try:
+        ffmpeg.run(stream, overwrite_output=True)
+    except Exception as e:
+        logger.error("error running the stream: %s", e)
 
 if __name__ == '__main__':
 
