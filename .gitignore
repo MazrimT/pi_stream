@@ -15,9 +15,9 @@ build*
 dist*
 *.egg-info*
 
-# secret file
-*secrets.json
+# local stuff file
 images*
+logs*
 
 # local test stuff
 *pytest.py*
