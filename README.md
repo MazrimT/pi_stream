@@ -40,7 +40,7 @@ python -m pip install -r requirements.txt   # installs required python packages
 ```
 
 # Run
-Put your Stream Key, API key and stream config in the config/config.toml file  
+Put your Stream Key and Streaming service in the config/config.toml file  
   
 This can't actually run yet, but when it can the idea is to:  
 this doesn't work yet, but idea is to do:  
