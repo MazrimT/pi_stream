@@ -1,4 +1,6 @@
 # pi_stream
+WORK IN PROGRESS!!!!
+
 Application for streaming directly from camera to Youtube with a Raspberry Pi
 
 Tested on:  
