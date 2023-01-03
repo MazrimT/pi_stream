@@ -1,7 +1,9 @@
 # pi_stream
 WORK IN PROGRESS!!!!
+I take no responsability for anything working or breaking anything software or hardware.
 
-Application for streaming directly from camera to Youtube with a Raspberry Pi
+
+Application for streaming directly from camera to Youtube or Twitch with a Raspberry Pi
 
 Tested on:  
 * Raspberry Pi 4b (4gb)  
@@ -9,8 +11,9 @@ Tested on:
 * microsoft usb webcam  
   
 TODO:  
+* add an png (or html?) overlay
 * get a Raspberry Pi HD camera and test/use that instead of usb camera
-* get a pi-touch screen and make a gui controlls the stream  
+* get a pi-touch screen and make a gui controls the stream  
 ** start/stops the stream  
 ** connect to a wifi  
 ** modify secrets.json config
@@ -44,12 +47,11 @@ python -m pip install -r requirements.txt   # installs required python packages
 # Run
 Put your Stream Key and Streaming service in the config/config.toml file  
   
-This can't actually run yet, but when it can the idea is to:  
-this doesn't work yet, but idea is to do:  
+Run:
 ```bash
 # in the virtual environment
 python pi_stream/app.py
 ```
   
-Eventually the idea will be that the app that controlls the touchscreen will start first and be in crontab as run on reboot.  
+Eventually the idea will be that the app that controls the touchscreen which will start first and be in crontab as run on reboot.  
  
