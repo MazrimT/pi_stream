@@ -1,0 +1,21 @@
+pre, code {
+    white-space: pre;
+    background-color: #f8f8f1;
+}
+table {
+    width: auto !important;
+    table-layout: auto !important;
+}
+.current_year {
+    background-color: #dbdbda;
+}
+footer {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    height: auto;   
+    font-size: 12px;
+    background-color: white;
+}

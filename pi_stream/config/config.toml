@@ -1,6 +1,0 @@
-
-[secrets]
-stream_key = ""                         # youtube or twitch stream key
-
-[stream]                            
-streaming_service = 'youtube'            # youtube or twitch

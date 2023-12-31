@@ -1,25 +1,11 @@
-# Byte-compiled / optimized / DLL files
+# python
 __pycache__/
 
-# Environments
-.env
-.venv
-env/
+# virutal environments
 venv/
-ENV/
-env.bak/
-venv.bak/
 
-# setup
-build*
-dist*
-*.egg-info*
+# local config
+config.toml
 
-# local stuff file
-images*
-logs*
-
-# local test stuff
-*pytest.py*
-*recordvideo.py*
-*samplecode.py*
+# env var
+.env

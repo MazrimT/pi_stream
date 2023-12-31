@@ -5,11 +5,19 @@ I take no responsability for anything working or breaking anything software or h
 
 Application for streaming directly from camera to Youtube or Twitch with a Raspberry Pi
 
-
- 
+Tested on:  
+* Raspberry Pi 4b (4gb)  
+* Raspian OS 64bit  
+* microsoft usb webcam  
+  
 TODO:  
-* everything
-* fixing login so it's not just open
+* add an png (or html?) overlay
+* get a Raspberry Pi HD camera and test/use that instead of usb camera
+* get a pi-touch screen and make a gui controls the stream  
+** start/stops the stream  
+** connect to a wifi  
+** modify secrets.json config
+** modify stream_config.toml
 
 # Install
 (assumes a clean install of Raspian OS with internet connection)
@@ -18,6 +26,7 @@ Install some things
 ```bash 
 sudo apt-get install git            # to clone this repo
 sudo apt-get install python3        # to run python code
+sudo apt-get install ffmpeg         # video software used
 ```
 
 Clone the repo
@@ -33,14 +42,19 @@ python -m venv venv                         # create a virtual environment
 source /venv/bin/activate                   # switches to the virtual environments python enterpreter
 python -m pip install --upgrade pip         # upgrades pip in virtual environment to latest version
 python -m pip install -r requirements.txt   # installs required python packages
+
+# alternative to installing all requirements just install the main packages that will handle their dependencies themselves:
+python -m pip install -r requirements_shortlist.txt
 ```
 
 # Run
+Put your Stream Key and Streaming service in the config/config.toml file  
   
-This assumes you have a raspberry pi that can connect to the internet and that you have a second device on the same network able to connect to it.
-  
-Put the run.py into cron @reboot to have the flask application that controls the streaming start when the pie boots up.  
+Run:
 ```bash
-@reboot sleep 30 && /home/[user]/git/pi_stream/venv/bin/python3 /home/[user]/git/pi_stream/run.py
+# in the virtual environment
+python pi_stream/app.py
 ```
-This will only start the webserver, not the streaming itself.
+  
+Eventually the idea will be that the app that controls the touchscreen which will start first and be in crontab as run on reboot.  
+ 

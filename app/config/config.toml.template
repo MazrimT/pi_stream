@@ -1,0 +1,17 @@
+# youtube or twitch stream key
+stream_key = "fdgdfgdfgdg"
+
+# youtube or twitch
+streaming_service = "youtube"
+
+# this will be set to off automatically on every boot.
+streaming = "off"
+
+# place to store the stream process id (PID)
+stream_process_id = 0
+
+# stream title
+stream_title = ""
+
+# stream description
+stream_description = ""
