@@ -4,7 +4,6 @@ import argparse
 import ffmpeg
 
 
-
 def get_args():
     parser = argparse.ArgumentParser(description="Parse arguments")
     parser.add_argument(
@@ -28,8 +27,7 @@ def get_args():
     
     return parser.parse_args()
 
-        
-        
+
 def main(streaming_service, stream_key):
 
 
@@ -70,15 +68,11 @@ def main(streaming_service, stream_key):
     ffmpeg.run(stream, overwrite_output=True)
 
 
-
-
-    
-    
 if __name__ == '__main__':
 
     args = get_args()
-    
+
     streaming_service = args.streaming_service if args.streaming_service else 'youtube'
     stream_key = args.stream_key if args.stream_key else 'xxxxxxxx'
-        
+
     main(streaming_service, stream_key)

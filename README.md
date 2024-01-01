@@ -17,6 +17,13 @@ Requires:
 # Install
 (assumes a clean install of Raspian OS with internet connection)
 
+
+Install Picamera2. 
+Very important this step is done first (before the virtual environment)
+```bash
+sudo apt install -y python3-picamera2 --no-install-recommends
+```
+
 Install some things  
 ```bash 
 git clone git@github.com:MazrimT/pi_stream.git      # clone this repo
@@ -25,11 +32,13 @@ git clone git@github.com:MazrimT/pi_stream.git      # clone this repo
 Setup things for Python  
 Make sure you are using a virtual environment! Certain parts of the code requires this to be set up!
 ```bash
-python -m venv venv                         # create a virtual environment
+python -m venv --system-site-packages venv  # create a virtual environment
 source /venv/bin/activate                   # switches to the virtual environments python enterpreter
 python -m pip install --upgrade pip         # upgrades pip in virtual environment to latest version
 python -m pip install -r requirements.txt   # installs required python packages
 ```
+VERY IMPORTANT! do not forget the "--system-site-packages" when creating the virtual environment because some things are installed with python3-picamera2 that are not accessible from virutal environment otherwise
+
 
 if you want set up so the Flask server starts automagically when the PI reboots:
 Add the following to crontab so the Flask server starts every on reboot
