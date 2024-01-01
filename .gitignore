@@ -9,6 +9,3 @@ config.toml
 
 # env var
 .flaskenv
-
-# test stuff
-*video*
