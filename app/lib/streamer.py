@@ -41,7 +41,7 @@ def main(streaming_service, stream_key):
     # set up the stream
     video_input = ffmpeg.input(
         filename='/dev/video0',
-        input_format='mjpeg',
+        input_format='raw',
     )
     audio_input = ffmpeg.input(
         filename='anullsrc=sample_rate=48000:channel_layout=mono',
