@@ -1,6 +1,8 @@
 import time
 import os
 import argparse
+import ffmpeg
+
 
 
 def get_args():
@@ -25,24 +27,51 @@ def get_args():
     )
     
     return parser.parse_args()
-   
-    
-    
+
+        
+        
 def main(streaming_service, stream_key):
-    
+
 
     if streaming_service == "twitch":
         stream_url = f"rtmps://live.twitch.tv/app/{stream_key}"
     elif streaming_service == "youtube":
         stream_url = f"rtmps://a.rtmp.youtube.com/live2/{stream_key}"
 
-    while True:            
-        print(f'{os.getpid()} - streaming to {stream_url}')
-        time.sleep(5)
-    
-    
-    
-    
+    # set up the stream
+    video_input = ffmpeg.input(
+        filename='/dev/video0',
+        input_format='mjpeg',
+    )
+    audio_input = ffmpeg.input(
+        filename='anullsrc=sample_rate=48000:channel_layout=mono',
+        f='lavfi',
+    )
+    stream = ffmpeg.output(
+        audio_input,
+        video_input, 
+        filename=stream_url, 
+        f='flv',
+        framerate='30',
+        vcodec='libx264',
+        acodec="aac", 
+        preset='ultrafast',
+        tune='zerolatency',
+        video_size=(1920, 1080),
+        video_bitrate='4500k',
+        audio_bitrate="128k",
+        maxrate='5000k',
+        bufsize='6000k',
+        threads=8,
+        ignore_unknown=None,
+        sn=None,
+        dn=None,
+    )
+    ffmpeg.run(stream, overwrite_output=True)
+
+
+
+
     
     
 if __name__ == '__main__':

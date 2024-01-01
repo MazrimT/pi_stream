@@ -1,0 +1,54 @@
+{%- extends 'base.html' %}
+{% block content %}
+<form method="POST" action="" class="container">
+    <div class="col">
+        <div class="row-sm">
+            <h4>Settings</h4>
+        </div>
+        <div class="row-sm">
+            <div class="col">
+
+                <div class="row">
+                    <label class="col col-form-label">Stream Key</label>
+                    <div class="col">
+                        <input name="stream_key" id="stream_key" class="form-control" type="text" value="{{ conf.stream_key }}" {% if conf.streaming == "on" %}disabled{% endif %}>
+                    </div>
+                </div>    
+
+                <div class="row">
+                    <label class="col col-form-label">Streaming Service</label>
+                    <div class="col">
+                        <select class="form-select form-select-m" name="streaming_service" id="streaming_service" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming == "on" %}disabled{% endif %}>
+                        {% for streaming_service in streaming_services %}
+                        <option value="{{ streaming_service }}" {% if streaming_service == conf.streaming_service %} selected {% endif %}>{{ streaming_service }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>    
+
+                <div class="row">
+                    <label class="col col-form-label">Streaming</label>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="streaming" name="streaming" {% if conf.streaming == "on" %}checked{% endif %}>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row-sm">
+            <br>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </div>
+</form>
+<div class="container">
+    <div class="col">
+        <br>
+        <div class="row-sm">
+            <a type="button" class="btn btn-secondary" href="{{ url_for('logout.logout') }}">Log out</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

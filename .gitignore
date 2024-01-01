@@ -8,4 +8,7 @@ venv/
 config.toml
 
 # env var
-.env
+.flaskenv
+
+# test stuff
+*video*

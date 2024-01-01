@@ -1,26 +1,53 @@
-from flask import Blueprint, render_template, request, current_app, flash, abort, redirect, url_for, LoginForm
+from flask import Blueprint, request, redirect, render_template, url_for
+from flask_login import LoginManager, UserMixin, login_user
+import os
 
 login = Blueprint('login', __name__)
+login_manager = LoginManager()
 
-@login.route('/login', methods=['GET', 'POST'])
-def login():
-    # Here we use a class of some kind to represent and validate our
-    # client-side form data. For example, WTForms is a library that will
-    # handle this for us, and we use a custom LoginForm to validate.
-    form = LoginForm()
-    if form.validate_on_submit():
-        # Login and validate the user.
-        # user should be an instance of your `User` class
+class User(UserMixin):
+    """ User class for the login manager """
+    pass
+
+users = {os.getenv('user'): {'password': os.getenv('password')}}
+
+@login_manager.user_loader
+def user_loader(email):
+    if email not in users:
+        return
+    user = User()
+    user.id = email
+    return user
+
+@login_manager.request_loader
+def request_loader(request):
+    email = request.form.get('email')
+    if email not in users:
+        return
+
+    user = User()
+    user.id = email
+    return user
+
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return redirect(url_for('login.login'))
+
+
+@login.route('/login', methods=['GET', 'POST'], endpoint='login')
+def v_login():
+    
+    if request.method == 'GET':
+        return render_template(
+            'login.html'
+        )
+    
+    email = request.form['email']
+    if email in users and request.form['password'] == users[email]['password']:
+        user = User()
+        user.id = email
         login_user(user)
+        return redirect(url_for('index.index'))
 
-        flash('Logged in successfully.')
+    return redirect(url_for('login.login'))
 
-        next = request.args.get('next')
-        # url_has_allowed_host_and_scheme should check if the url is safe
-        # for redirects, meaning it matches the request host.
-        # See Django's url_has_allowed_host_and_scheme for an example.
-        if not url_has_allowed_host_and_scheme(next, request.host):
-            return abort(400)
-
-        return redirect(next or url_for('index'))
-    return render_template('login.html', form=form)

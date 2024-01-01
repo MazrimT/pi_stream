@@ -1,56 +1,27 @@
 {%- extends 'base.html' %}
 {% block content %}
-{{ conf }}
-<form method="POST" action="" class="container">
+
+
+<div class="container">
     <div class="col">
-        <div class="row">
-            <div class="col">
-
-                <div class="row">
-                    <label class="col col-form-label">Stream Title</label>
-                    <div class="col">
-                        <input name="stream_title" id="stream_title" class="form-control" type="text" value="{{ conf.stream_title }}" {% if conf.streaming == "on" %}disabled{% endif %}>
-                    </div>
-                </div>    
-
-                <div class="row">
-                    <label class="col col-form-label">Stream Description</label>
-                    <div class="col">
-                        <textarea name="stream_description" id="stream_description" class="form-control" {% if conf.streaming == "on" %}disabled{% endif %} row="5">{{ conf.stream_description }}</textarea>
-                    </div>
-                </div>    
-
-                <div class="row">
-                    <label class="col col-form-label">Stream Key</label>
-                    <div class="col">
-                        <input name="stream_key" id="stream_key" class="form-control" type="text" value="{{ conf.stream_key }}" {% if conf.streaming == "on" %}disabled{% endif %}>
-                    </div>
-                </div>    
-
-                <div class="row">
-                    <label class="col col-form-label">Streaming Service</label>
-                    <div class="col">
-                        <select class="form-select form-select-m" name="streaming_service" id="streaming_service" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming == "on" %}disabled{% endif %}>
-                        {% for streaming_service in streaming_services %}
-                        <option value="{{ streaming_service }}" {% if streaming_service == conf.streaming_service %} selected {% endif %}>{{ streaming_service }}</option>
-                        {% endfor %}
-                        </select>
-                    </div>
-                </div>    
-
-                <div class="row">
-                    <label class="col col-form-label">Streaming</label>
-                    <div class="col">
-                        <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="streaming" name="streaming" {% if conf.streaming == "on" %}checked{% endif %}>
-                        </div>
-                    </div>
-                </div>                  
-            </div>
-        </div>
         <div class="row-sm">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <h4>PI Streamer</h4>
+        </div>        
+        <br>        
+        {% if current_user.is_authenticated %}
+        <div class="row-sm">
+            <a type="button" class="btn btn-primary" href="{{ url_for('settings.settings') }}">Settings</a>
         </div>
+        <br> 
+        <div class="row-sm">
+            <a type="button" class="btn btn-secondary" href="{{ url_for('logout.logout') }}">Log out</a>
+        </div>
+        {% else %}
+        <div class="row-sm">
+            <a type="button" class="btn btn-secondary" href="{{ url_for('login.login') }}">Login</a>
+        </div>
+        {% endif %}
     </div>
-</form>
+</div>    
+
 {% endblock %}

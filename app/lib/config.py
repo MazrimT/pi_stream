@@ -74,27 +74,6 @@ class Config(object):
         self.config['stream_process_id'] = new_value
         self.update_config()
 
-    # Streaming title
-    @property
-    def stream_title(self):
-        return self.config['stream_title']
-
-    @stream_title.setter
-    def stream_title(self, new_value):
-        self.config['stream_title'] = new_value
-        self.update_config()
-
-    # Streaming description
-    @property
-    def stream_description(self):
-        return self.config['stream_description']
-
-    @stream_description.setter
-    def stream_description(self, new_value):
-        self.config['stream_description'] = new_value
-        self.update_config()
-
-
 
 
 

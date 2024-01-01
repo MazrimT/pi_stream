@@ -3,6 +3,4 @@ gunicorn
 Bootstrap-Flask
 tomlkit
 flask-login
-python-dotenv
-
-#google-api-python-client
+ffmpeg-python @ git+https://github.com/kkroening/ffmpeg-python@master
