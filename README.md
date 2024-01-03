@@ -33,23 +33,11 @@ Setup things for Python
 Make sure you are using a virtual environment! Certain parts of the code requires this to be set up!
 ```bash
 python -m venv --system-site-packages venv  # create a virtual environment
-source /venv/bin/activate                   # switches to the virtual environments python enterpreter
+source venv/bin/activate                    # switches to the virtual environments python enterpreter
 python -m pip install --upgrade pip         # upgrades pip in virtual environment to latest version
 python -m pip install -r requirements.txt   # installs required python packages
 ```
 VERY IMPORTANT! do not forget the "--system-site-packages" when creating the virtual environment because some things are installed with python3-picamera2 that are not accessible from virutal environment otherwise
-
-add a dummy audio source
-```bash
-sudo modprobe snd-dummy                       # run the command
-sudo nano /etc/modprobe.d/alsa-base.conf      # add a row: options snd-dummy enable=1,1 index=0,1
-sudo nano /etc/modules                        # add a row: snd-dummy fake_buffer=0
-
-#check recording devices
-arecord -L
-#force refresh alsa?
-sudo alsa force-reload
-```
 
 
 if you want set up so the Flask server starts automagically when the PI reboots:
