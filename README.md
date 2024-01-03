@@ -39,6 +39,18 @@ python -m pip install -r requirements.txt   # installs required python packages
 ```
 VERY IMPORTANT! do not forget the "--system-site-packages" when creating the virtual environment because some things are installed with python3-picamera2 that are not accessible from virutal environment otherwise
 
+add a dummy audio source
+```bash
+sudo modprobe snd-dummy                       # run the command
+sudo nano /etc/modprobe.d/alsa-base.conf      # add a row: options snd-dummy enable=1,1 index=0,1
+sudo nano /etc/modules                        # add a row: snd-dummy fake_buffer=0
+
+#check recording devices
+arecord -L
+#force refresh alsa?
+sudo alsa force-reload
+```
+
 
 if you want set up so the Flask server starts automagically when the PI reboots:
 Add the following to crontab so the Flask server starts every on reboot
@@ -49,7 +61,7 @@ Add the following to crontab so the Flask server starts every on reboot
 
 # Setup
 
-Remove the -tempalate from the .flaskenv-template file and fill in your settings.  
+Remove the -template from the .flaskenv-template file and fill in your settings.  
 The username and password is for the flask admin page and the secret key can be generated however you want, or run the create_secret.py  
 
 Add the following to crontab so the Flask server starts every on reboot
