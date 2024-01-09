@@ -1,7 +1,7 @@
 {%- extends 'base.html' %}
 {% block content %}
 <form method="POST" action="" class="container">
-    <div class="col">
+
         <div class="row-sm">
             <h4>Settings</h4>
         </div>
@@ -27,6 +27,17 @@
                 </div>    
 
                 <div class="row">
+                    <label class="col col-form-label">Stream Resolution</label>
+                    <div class="col">
+                        <select class="form-select form-select-m" name="resolution" id="resolution" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming == "on" %}disabled{% endif %}>
+                        {% for resolution in resolutions %}
+                        <option value="{{ resolution }}" {% if resolution == conf.resolution %} selected {% endif %}>{{ resolution }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>    
+
+                <div class="row">
                     <label class="col col-form-label">Streaming</label>
                     <div class="col">
                         <div class="form-check form-switch">
@@ -34,14 +45,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <label for="overlay" class="col col-form-label">Current Overlay</label>
+ 
+                    <img id="overlay" src="{{ url_for('static', filename='images/overlay.png') }}" class="img-fluid img-thumbnail" width="100px" height="100px">
 
+                </div>
             </div>
         </div>
         <div class="row-sm">
             <br>
             <button type="submit" class="btn btn-primary">Update</button>
         </div>
-    </div>
+
 </form>
 <div class="container">
     <div class="col">

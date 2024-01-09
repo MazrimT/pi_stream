@@ -4,3 +4,5 @@ Bootstrap-Flask
 tomlkit
 flask-login
 python-dotenv
+ffmpeg-python
+opencv-python

@@ -64,6 +64,17 @@ class Config(object):
         self.config['streaming'] = new_value
         self.update_config()
 
+    # Resolution
+    @property
+    def resolution(self):
+        return self.config['resolution']
+
+    @resolution.setter
+    def resolution(self, new_value):
+        self.config['resolution'] = new_value
+        self.update_config()
+
+
     # Streaming process id
     @property
     def stream_process_id(self):

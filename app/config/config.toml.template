@@ -4,6 +4,9 @@ stream_key = "fdgdfgdfgdg"
 # youtube or twitch
 streaming_service = "youtube"
 
+# resolution
+resolution = "1280x720"
+
 # this will be set to off automatically on every boot.
 streaming = "off"
 
