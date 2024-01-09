@@ -6,11 +6,15 @@ The idea behind this application is to set up on a raspberry pi with a pi camera
 
  
 TODO:  
-* make the video have an overlay
 * if stream fails for some reason exit the subprocess and set config back to "off"
-* move all stream config to config.toml file and a section on the settings page
+** this happens now if it's closed and when server starts, but not if it fails
+* move all relavent stream config to config.toml file and a section on the settings page
+** resolution done
 * make it clearer in settings page that we're streaming maybe button to start/stop?
 * get rid of ```Multiple -c, -codec, -acodec, -vcodec, -scodec or -dcodec options specified for stream 0, only the last option '-c:v libx264' will be used.``` message
+* set up something that will get a new overlay image from internet source every 10 seconds
+** save image as app/static/images/overlay.png so stream picks it up automagically
+** don't lock the setting if streaming so it can be changed on the fly
 
 # prerequisites
 * a Raspberry PI with wifi/internet connection.  
@@ -20,22 +24,22 @@ TODO:
 # Install
 (assumes a clean install of Raspian OS with internet connection)
 
+Clone this repo
+```bash 
+git clone git@github.com:MazrimT/pi_stream.git      # clone this repo
+```
+
 Install Picamera2. 
 Very important this step is done first (before the virtual environment)
 ```bash
 sudo apt install -y python3-picamera2 --no-install-recommends
 ```
 
-Install some things  
-```bash 
-git clone git@github.com:MazrimT/pi_stream.git      # clone this repo
-```
-
 Setup things for Python  
 Make sure you are using a virtual environment!  
 Certain parts of the code requires this to be set up!
 ```bash
-python -m venv --system-site-packages venv  # create a virtual environment
+python -m venv --system-site-packages venv  # create a virtual environment, --system-site-packages is important! otherwise picamera wont work
 source venv/bin/activate                    # switches to the virtual environments python enterpreter
 python -m pip install --upgrade pip         # upgrades pip in virtual environment to latest version
 python -m pip install -r requirements.txt   # installs required python packages
@@ -44,6 +48,8 @@ VERY IMPORTANT! do not forget the "--system-site-packages" when creating the vir
 
 Remove the -template from the .flaskenv-template file and fill in your settings.  
 The username and password is for the flask admin page and the secret key can be generated however you want, or run the create_secret.py  
+
+Remove the -template from app/config/config.toml-template and if you want add your stream key (can also be added through UI)
 
 if you want set up so the Flask server starts automagically when the PI reboots:
 Add the following to crontab so the Flask server starts every on reboot
@@ -57,5 +63,8 @@ Add the following to crontab so the Flask server starts every on reboot
 in virtual environment:
 ```bash
 python run_debug.py             # to test stuff
-ruyn run.py                     # for "production"    
+python run.py                   # for "production"    
 ```
+
+Browse to http://127.0.0.1:5000/ or IP on what-ever PI it is set up on.
+Username and password were configured in the .flaskenv file

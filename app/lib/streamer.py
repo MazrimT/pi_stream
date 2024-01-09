@@ -5,6 +5,7 @@ from picamera2.outputs import FfmpegOutput
 from picamera2 import Picamera2, MappedArray
 import cv2
 import time
+import os
 
 
 def get_args():
@@ -30,12 +31,7 @@ def get_args():
         help="Streaming resolution, default 1280x720",
         default="1280x720"
     )
-    
-    parser.add_argument(
-        '--image',
-        
-    )
-        
+
     return parser.parse_args()
 
 def apply_overlay(request):
@@ -50,7 +46,6 @@ def apply_overlay(request):
     if time.time() - OVERLAY_UPDATE_TIME > 10:
         OVERLAY_IMAGE, OVERLAY_WIDTH, OVERLAY_HEIGHT, OVERLAY_COLOR, OVERLAY_ALPHA = get_overlay()
         OVERLAY_UPDATE_TIME = time.time()
-        print("updated")
     
     with MappedArray(request, "main") as m:
         
@@ -122,7 +117,6 @@ def main():
     picam2.pre_callback = apply_overlay
     
     encoder = H264Encoder(bitrate=10000000)
-    #encoder = MJPEGEncoder()
     output = FfmpegOutput(ffmpeg_string, audio=True)
     
     picam2.start_recording(encoder, output)
@@ -150,7 +144,8 @@ if __name__ == '__main__':
     STREAM_KEY = args.stream_key if args.stream_key else 'xxxxxxxx'
     WIDTH = int(args.resolution.split('x')[0])
     HEIGHT = int(args.resolution.split('x')[1])
-    OVERLAY_IMAGE_PATH = "/home/mazrim/git/pi_stream/app/lib/rpi.png"
+
+    OVERLAY_IMAGE_PATH = os.path.dirname(os.path.realpath(__file__)) + "/../static/images/overlay.png"
     
     OVERLAY_IMAGE, OVERLAY_WIDTH, OVERLAY_HEIGHT, OVERLAY_COLOR, OVERLAY_ALPHA = get_overlay()
     OVERLAY_UPDATE_TIME = time.time()

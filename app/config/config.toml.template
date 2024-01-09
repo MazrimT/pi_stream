@@ -1,5 +1,5 @@
 # youtube or twitch stream key
-stream_key = "fdgdfgdfgdg"
+stream_key = "stream key goes here"
 
 # youtube or twitch
 streaming_service = "youtube"

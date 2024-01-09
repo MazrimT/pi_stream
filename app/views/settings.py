@@ -33,7 +33,7 @@ def v_settings():
             current_app.config['PYTHON_EXECUTABLE'], f'{current_app.root_path}/lib/streamer.py', 
             '--streaming_service', conf.streaming_service, 
             '--stream_key', conf.stream_key,
-            '--resolution', conf.resolution
+            '--resolution', conf.resolution,
         ]
 
         streaming_process = subprocess.Popen(commands)
@@ -42,7 +42,7 @@ def v_settings():
   
     if conf.streaming == 'off' and conf.stream_process_id:
         current_app.logger.info(f"Stopping stream, PID: {conf.stream_process_id}")
-        streaming_process.kill()
+        os.kill(conf.stream_process_id, signal.SIGTERM)
         conf.stream_process_id = 0     
 
     streaming_services = ['youtube', 'twitch']
