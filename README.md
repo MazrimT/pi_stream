@@ -15,6 +15,7 @@ TODO:
 * set up something that will get a new overlay image from internet source every 10 seconds.
     * save image as app/static/images/overlay.png so stream picks it up automagically.
     * don't lock the setting if streaming so it can be changed on the fly.
+* add set_control stuff, like autofocus (not sure if that works to have in the code if not using autofocus enabled camera)
 
 # prerequisites
 * a Raspberry PI with wifi/internet connection.  
