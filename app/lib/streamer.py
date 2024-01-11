@@ -6,6 +6,8 @@ from picamera2 import Picamera2, MappedArray
 import cv2
 import time
 import os
+from libcamera import controls
+from flask import current_app
 
 
 def get_args():
@@ -52,8 +54,9 @@ def apply_overlay(request):
         frame = m.array
         # Overlay the image
         for c in range(0, 3):
-            frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c] = (OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c] +
-                                (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c])
+            frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c] = (
+                OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c] + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
+            )
             
             
 def get_overlay():
@@ -91,16 +94,19 @@ def main():
 
     # resource for some of this:
     # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites
+    # ultrafast, superfast, veryfast, faster, fast, medium (default), slow and veryslow
     ffmpeg_command = [
         '-framerate 30',
-        '-g 60',
-        f'-s {WIDTH}x{HEIGHT}',
+        '-g 15',
+        f'-video_size {WIDTH}x{HEIGHT}',
         '-c:v libx264',
-        '-b:v 10000k',
-        '-preset veryfast',
-        '-maxrate 10000k',
-        '-bufsize 960k',
-        '-threads 8',
+        '-b:v 10M',
+        #'-crf 0', lossless, don't work well
+        '-preset superfast',
+        "-pix_fmt yuv420p",
+        '-maxrate 1M',
+        '-bufsize 500k',
+        '-threads 4',
         '-ignore_unknown',
         '-sn',
         '-f flv',
@@ -113,6 +119,12 @@ def main():
     video_config = picam2.create_video_configuration(main={"size": (WIDTH, HEIGHT)})
     video_config["buffer_count"] = 6
     picam2.configure(video_config)
+    
+    # turns on autofocus if supported
+    try:
+        picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
+    except RuntimeError as e:
+        print(e)
     
     picam2.pre_callback = apply_overlay
     
