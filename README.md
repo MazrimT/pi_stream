@@ -6,6 +6,7 @@ The idea behind this application is to set up on a raspberry pi with a pi camera
 
  
 TODO:  
+* get it running on a zero 2 w
 * if stream fails for some reason exit the subprocess and set config back to "off". 
     * this happens now if it's closed and when server starts, but not if it fails.
 * move all relavent stream config to config.toml file and a section on the settings page.
@@ -30,12 +31,28 @@ git clone git@github.com:MazrimT/pi_stream.git      # clone this repo
 ```
 
 ## Install Picamera2
-Very important this step is done first (before the virtual environment)
 ```bash
 sudo apt install -y python3-picamera2 --no-install-recommends
 ```
+## install ffmpeg
+The streaming requires ffmpeg
+```bash
+sudo apt install ffmpeg
+```
+
+## set PULSE_RUNTIME_PATH
+set up an environment variable:
+`PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/"`
+Many ways to do this but one example is to put it in users home dir .bash_profile file
+This is a requirement for "no audio" to work.
 
 ## Setup things for Python  
+
+
+Connect streaming software to start preview
+Viewers will be able to find your stream once you go live
+Title
+Ras
 Make sure you are using a virtual environment!  
 Certain parts of the code requires this to be set up!
 ```bash
