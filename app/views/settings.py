@@ -23,6 +23,13 @@ def v_settings():
         set_conf_from_post("stream_key", conf.stream_key)
         set_conf_from_post("streaming_service", conf.streaming_service)
         set_conf_from_post("resolution", conf.resolution)
+        set_conf_from_post("bitrate", conf.bitrate)
+        set_conf_from_post("preset", conf.preset)
+        set_conf_from_post("maxrate", conf.maxrate)
+        set_conf_from_post("bufsize", conf.bufsize)
+        set_conf_from_post("threads", conf.threads)
+        set_conf_from_post("framerate", conf.framerate)
+        set_conf_from_post("overlay_url", conf.overlay_url)
         set_conf_from_post("streaming", "off")
 
     # if starting to stream
@@ -36,6 +43,18 @@ def v_settings():
             conf.stream_key,
             "--resolution",
             conf.resolution,
+            "--bitrate",
+            conf.bitrate,
+            "--preset",
+            conf.preset,
+            "--bufsize",
+            conf.bufsize,
+            "--threads",
+            conf.threads,
+            "--framerate",
+            conf.framerate,
+            "--streaming",
+            conf.streaming,
         ]
 
         streaming_process = subprocess.Popen(commands)
@@ -45,15 +64,13 @@ def v_settings():
     if conf.streaming == "off" and conf.stream_process_id:
         current_app.logger.info(f"Stopping stream, PID: {conf.stream_process_id}")
         os.kill(conf.stream_process_id, signal.SIGTERM)
-        conf.stream_process_id = 0
+        conf.stream_process_id = None
 
-    streaming_services = ["youtube", "twitch"]
-    resolutions = ["1920x1080", "1280x720", "640x480"]
+
 
     return render_template(
         "settings.html",
         method=request.method,
         conf=conf,
-        streaming_services=streaming_services,
-        resolutions=resolutions,
+        options=conf.options
     )

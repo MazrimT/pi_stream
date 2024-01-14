@@ -18,9 +18,8 @@ app = Flask(__name__)
 app.secret_key = os.getenv("secret_key")
 app.config["stream_config"] = Config(app_path=app.root_path)
 bootstrap = Bootstrap5(app)
-app.config[
-    "BOOTSTRAP_SERVE_LOCAL"
-] = True  # makes sure we don't go online for bootstrap but uses servers files
+# makes sure we don't go online for bootstrap but uses servers files
+app.config["BOOTSTRAP_SERVE_LOCAL"] = True
 
 # To be able to test certain things on windows
 app.config["PYTHON_EXECUTABLE"] = (

@@ -1,14 +1,34 @@
-# youtube or twitch stream key
-stream_key = "stream key goes here"
+# These settings are controlled by the flask web ui
+# Some of them have validations/acceptable options in the code
+# Change these manually at your own risk!
 
-# youtube or twitch
+## youtube or twitch stream key
+stream_key = ""
+
+## youtube or twitch
 streaming_service = "youtube"
 
-# resolution
+## resolution
 resolution = "1280x720"
 
-# this will be set to off automatically on every boot.
-streaming = "off"
+## camera framerate
+framerate = "30"
 
-# place to store the stream process id (PID)
-stream_process_id = 0
+## ffmpeg -preset
+preset = "veryfast"
+
+## ecoder and ffmpeg video bitrate
+bitrate = "15M"
+
+## ffmpeg -maxrate
+maxrate = "15M"
+
+## ffmpeg -bufsize
+bufsize = "15M"
+
+## threads(cpu cores) that ffmpeg can use
+threads = "4"
+
+# PNG that will be overlayed on the video stream
+# image will be downloaded every 30 seconds so if the image changes it will automatically update the stream
+overlay_url = ""

@@ -2,61 +2,135 @@
 {% block content %}
 <form method="POST" action="" class="container">
 
-        <div class="row-sm">
-            <h4>Settings</h4>
-        </div>
-        <div class="row-sm">
-            <div class="col">
+    <div class="row-sm">
+        <h4>Settings</h4>
+    </div>
+    <div class="row-sm">
+        <div class="col">
 
-                <div class="row">
-                    <label class="col col-form-label">Stream Key</label>
-                    <div class="col">
-                        <input name="stream_key" id="stream_key" class="form-control" type="password" value="{{ conf.stream_key }}" {% if conf.streaming == "on" %}disabled{% endif %} placeholder="Stream Key">
-                    </div>
-                </div>    
+            <div class="row">
+                <label class="col col-form-label">Stream Key</label>
+                <div class="col">
+                    <input name="stream_key" id="stream_key" class="form-control w-50" type="password" value="{{ conf.stream_key }}" {% if conf.streaming=="on" %}disabled{% endif %} placeholder="Stream Key">
+                </div>
+            </div>
 
-                <div class="row">
-                    <label class="col col-form-label">Streaming Service</label>
-                    <div class="col">
-                        <select class="form-select form-select-m" name="streaming_service" id="streaming_service" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming == "on" %}disabled{% endif %}>
-                        {% for streaming_service in streaming_services %}
-                        <option value="{{ streaming_service }}" {% if streaming_service == conf.streaming_service %} selected {% endif %}>{{ streaming_service }}</option>
+            <div class="row">
+                <label class="col col-form-label">Streaming Service</label>
+                <div class="col">
+                    <select class="form-select form-select-m w-50" name="streaming_service" id="streaming_service" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
+                        {% for streaming_service in options.streaming_services %}
+                        <option value="{{ streaming_service }}" {% if streaming_service==conf.streaming_service %} selected {% endif %}>{{ streaming_service }}</option>
                         {% endfor %}
-                        </select>
-                    </div>
-                </div>    
+                    </select>
+                </div>
+            </div>
 
-                <div class="row">
-                    <label class="col col-form-label">Stream Resolution</label>
-                    <div class="col">
-                        <select class="form-select form-select-m" name="resolution" id="resolution" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming == "on" %}disabled{% endif %}>
-                        {% for resolution in resolutions %}
-                        <option value="{{ resolution }}" {% if resolution == conf.resolution %} selected {% endif %}>{{ resolution }}</option>
+            <div class="row">
+                <label class="col col-form-label">Stream Resolution</label>
+                <div class="col">
+                    <select class="form-select form-select-m w-50" name="resolution" id="resolution" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
+                        {% for resolution in options.resolutions %}
+                        <option value="{{ resolution }}" {% if resolution==conf.resolution %} selected {% endif %}>{{ resolution }}</option>
                         {% endfor %}
-                        </select>
-                    </div>
-                </div>    
+                    </select>
+                </div>
+            </div>
 
-                <div class="row">
-                    <label class="col col-form-label">Streaming</label>
-                    <div class="col">
-                        <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="streaming" name="streaming" {% if conf.streaming == "on" %}checked{% endif %}>
-                        </div>
+            <div class="row">
+                <label class="col col-form-label">Framerate</label>
+                <div class="col">
+                    <select class="form-select form-select-m w-50" name="framerate" id="framerate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
+                        {% for framerate in options.framerates %}
+                        <option value="{{ framerate }}" {% if framerate==conf.framerate %} selected {% endif %}>{{ framerate }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col col-form-label">Preset</label>
+                <div class="col">
+                    <select class="form-select form-select-m w-50" name="preset" id="preset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
+                        {% for preset in options.presets %}
+                        <option value="{{ preset }}" {% if preset==conf.preset %} selected {% endif %}>{{ preset }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col col-form-label">Bitrate</label>
+                <div class="col">
+                    <select class="form-select form-select-m w-50" name="bitrate" id="bitrate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
+                        {% for bitrate in options.bitrates %}
+                        <option value="{{ bitrate }}" {% if bitrate==conf.bitrate %} selected {% endif %}>{{ bitrate }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+
+
+            <!-- uses the bitrate list -->
+            <div class="row">
+                <label class="col col-form-label">Maxrate</label>
+                <div class="col">
+                    <select class="form-select form-select-m w-50" name="maxrate" id="maxrate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
+                        {% for bitrate in options.bitrates %}
+                        <option value="{{ bitrate }}" {% if bitrate==conf.maxrate %} selected {% endif %}>{{ bitrate }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- uses the bitrate list -->
+            <div class="row">
+                <label class="col col-form-label">Bufsize</label>
+                <div class="col">
+                    <select class="form-select form-select-m w-50" name="bufsize" id="bufsize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
+                        {% for bitrate in options.bitrates %}
+                        <option value="{{ bitrate }}" {% if bitrate==conf.bufsize %} selected {% endif %}>{{ bitrate }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <label class="col col-form-label">Threads</label>
+                <div class="col">
+                    <select class="form-select form-select-m w-50" name="threads" id="threads" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
+                        {% for threads in options.threadses %}
+                        <option value="{{ threads }}" {% if threads==conf.threads %} selected {% endif %}>{{ threads }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col col-form-label">Overlay URL</label>
+                <div class="col">
+                    <input name="overlay_url" id="overlay_url" class="form-control w-50" type="url" value="{{ conf.overlay_url }}" {% if conf.streaming=="on" %}disabled{% endif %} placeholder="Overlay Url">
+                </div>
+            </div>
+
+
+            <div class="row">
+                <label class="col col-form-label">Streaming</label>
+                <div class="col">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="streaming" name="streaming" {% if conf.streaming=="on" %}checked{% endif %}>
                     </div>
                 </div>
-                <!-- <div class="row">
-                    <label for="overlay" class="col col-form-label">Current Overlay</label>
- 
-                    <img id="overlay" src="{{ url_for('static', filename='images/overlay.png') }}" class="img-fluid img-thumbnail" width="100px" height="100px">
-
-                </div>-->
             </div>
+
         </div>
-        <div class="row-sm">
-            <br>
-            <button type="submit" class="btn btn-primary">Update</button>
-        </div>
+    </div>
+    <div class="row-sm">
+        <br>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
 
 </form>
 <div class="container">

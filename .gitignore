@@ -9,3 +9,6 @@ config.toml
 
 # env var
 .flaskenv
+
+# local stuff
+.vscode*
