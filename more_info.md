@@ -12,3 +12,12 @@ Simplification:
 * 1080p @30fps -> 10 Mbps
 * 720p @60fps -> 6 Mbps
 * 240p - 720p @30fps -> 4 Mbps
+
+
+
+
+
+### Unavoidable warnings
+
+#### Multiple -c, -codec, -acodec, -vcodec, -scodec or -dcodec options specified for stream 0, only the last option '-c:v libx264' will be used.
+Can't get rid of this since the ffmpeg output in picamera2 does some settings that we then override with libx264

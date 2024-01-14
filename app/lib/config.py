@@ -10,7 +10,7 @@ class Config(object):
 
         self._data = self._load_config()
 
-        # Properties with default values
+        # Properties not written to file and always defaulted on start
         self.streaming = "off"
         self.stream_process_id = None
 

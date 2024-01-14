@@ -10,6 +10,7 @@ settings = Blueprint("settings", __name__)
 @settings.route("/settings", methods=["POST", "GET"], endpoint="settings")
 @login_required
 def v_settings():
+
     def set_conf_from_post(key, fallback) -> None:
         if request.form.get(key):
             setattr(conf, key, request.form[key])
@@ -31,6 +32,7 @@ def v_settings():
         set_conf_from_post("framerate", conf.framerate)
         set_conf_from_post("overlay_url", conf.overlay_url)
         set_conf_from_post("streaming", "off")
+
 
     # if starting to stream
     if conf.streaming == "on" and not conf.stream_process_id:

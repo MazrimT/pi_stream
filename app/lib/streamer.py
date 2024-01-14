@@ -216,7 +216,7 @@ def main():
 
 if __name__ == "__main__":
     ARGS = get_args()
-
+    print(ARGS)
     WIDTH = int(ARGS.resolution.split("x")[0])
     HEIGHT = int(ARGS.resolution.split("x")[1])
 
