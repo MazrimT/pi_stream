@@ -11,11 +11,12 @@ import threading
 
 def get_args():
     parser = argparse.ArgumentParser(description="Parse arguments")
+
     parser.add_argument(
         "--streaming_service",
         required=False,
         type=str,
-        help="The service to stream to, Youtube or Twitch, default youtube",
+        help="The service to stream to, uoutube or twitch, default youtube",
         default="youtube",
     )
 
@@ -81,6 +82,7 @@ def get_args():
         help="Streaming framerate, default 30",
         default="30",
     )
+
     return parser.parse_args()
 
 
@@ -156,7 +158,7 @@ def main():
 
     update_overlay_thread = threading.Thread(target=update_overlay)
     update_overlay_thread.start()
-
+    print(f"Streaming service {ARGS.streaming_service}")
     if ARGS.streaming_service == "twitch":
         stream_url = f"rtmp://live.twitch.tv/app/{ARGS.stream_key}"
     elif ARGS.streaming_service == "youtube":
