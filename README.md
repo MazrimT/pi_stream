@@ -25,7 +25,7 @@ TODO:
 
 # Install
 (assumes a clean install of Raspian OS with internet connection)
-if not already done:
+if not already done:  
 ```bash
 sudo apt update
 sudo apt upgrade
