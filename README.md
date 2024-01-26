@@ -25,10 +25,16 @@ TODO:
 
 # Install
 (assumes a clean install of Raspian OS with internet connection)
+if not already done:
+```bash
+sudo apt update
+sudo apt upgrade
+sudo apt install git
+```
 
 ## Clone this repo
 ```bash 
-git clone git@github.com:MazrimT/pi_stream.git      # clone this repo
+git clone git@github.com:MazrimT/pi_stream.git
 ```
 
 ## Install Picamera2
