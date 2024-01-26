@@ -55,8 +55,6 @@ def v_settings():
             conf.threads,
             "--framerate",
             conf.framerate,
-            "--streaming",
-            conf.streaming,
         ]
 
         streaming_process = subprocess.Popen(commands)
