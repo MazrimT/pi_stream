@@ -19,7 +19,7 @@ class Config(object):
             "streaming_services": ["youtube", "twitch"],
             "resolutions": ["1920x1080", "1280x720", "640x480"],
             # bitrates are used for bitrate, maxrate, bufsize
-            "bitrates": ["500k", "1M", "2M", "4M", "6M", "10M", "12M", "15M", "20M", "25M"],
+            "bitrates": ["500k", "1M", "2M", "4M", "6M", "10M", "12M", "15M", "20M", "25M", "50M", "100M"],
             "presets": [
                 "ultrafast",
                 "superfast",
