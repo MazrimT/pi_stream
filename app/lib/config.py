@@ -31,7 +31,7 @@ class Config(object):
                 "veryslow",
             ],
             "framerates": ["30", "60"],
-            "threadses": ["1","2","3", "4"]
+            "threadses": ["1","2","3", "4", "5", "6", "7", "8"]
         }
 
     def __str__(self):
