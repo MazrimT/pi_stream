@@ -194,7 +194,7 @@ def main():
     except RuntimeError as e:
         print(e)
 
-    picam2.pre_callback = apply_overlay
+    #picam2.pre_callback = apply_overlay
 
     encoder = H264Encoder(bitrate=brstr_to_brint(ARGS.bitrate))
     # encoder = Encoder()
