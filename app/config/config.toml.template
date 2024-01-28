@@ -14,20 +14,8 @@ resolution = "1280x720"
 ## camera framerate
 framerate = "30"
 
-## ffmpeg -preset
-preset = "veryfast"
-
-## ecoder and ffmpeg video bitrate
+## ecoder  bitrate
 bitrate = "15M"
-
-## ffmpeg -maxrate
-maxrate = "15M"
-
-## ffmpeg -bufsize
-bufsize = "15M"
-
-## threads(cpu cores) that ffmpeg can use
-threads = "4"
 
 # Overlay on/off
 overlay = "off"

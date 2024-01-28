@@ -18,20 +18,8 @@ class Config(object):
         self.options = {
             "streaming_services": ["youtube", "twitch"],
             "resolutions": ["1920x1080", "1280x720", "640x480"],
-            # bitrates are used for bitrate, maxrate, bufsize
             "bitrates": ["500k", "1M", "2M", "4M", "6M", "10M", "12M", "15M", "20M", "25M", "50M", "100M"],
-            "presets": [
-                "ultrafast",
-                "superfast",
-                "veryfast",
-                "faster",
-                "fast",
-                "medium",
-                "slow",
-                "veryslow",
-            ],
             "framerates": ["30", "60"],
-            "threadses": ["1","2","3", "4", "5", "6", "7", "8"],
             "overlay": ["on", "off"]
         }
 
@@ -89,16 +77,6 @@ class Config(object):
         self._data["framerate"] = value
         self._write_config()
 
-    ## Preset
-    @property
-    def preset(self):
-        return self._data["preset"]
-
-    @preset.setter
-    def preset(self, value):
-        self._data["preset"] = value
-        self._write_config()
-
     ## Bitrate
     @property
     def bitrate(self):
@@ -107,36 +85,6 @@ class Config(object):
     @bitrate.setter
     def bitrate(self, value):
         self._data["bitrate"] = value
-        self._write_config()
-
-    ## Maxrate
-    @property
-    def maxrate(self):
-        return self._data["maxrate"]
-
-    @maxrate.setter
-    def maxrate(self, value):
-        self._data["maxrate"] = value
-        self._write_config()
-
-    ## Bufsize
-    @property
-    def bufsize(self):
-        return self._data["bufsize"]
-
-    @bufsize.setter
-    def bufsize(self, value):
-        self._data["bufsize"] = value
-        self._write_config()
-
-    ## Threads
-    @property
-    def threads(self):
-        return self._data["threads"]
-
-    @threads.setter
-    def threads(self, value):
-        self._data["threads"] = value
         self._write_config()
 
     ## Overlay

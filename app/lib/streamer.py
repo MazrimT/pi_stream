@@ -166,28 +166,10 @@ def main():
 
     update_overlay_thread = threading.Thread(target=update_overlay)
     update_overlay_thread.start()
-    print(f"Streaming service {ARGS.streaming_service}")
     if ARGS.streaming_service == "twitch":
         stream_url = f"rtmp://live.twitch.tv/app/{ARGS.stream_key}"
     elif ARGS.streaming_service == "youtube":
         stream_url = f"rtmp://a.rtmp.youtube.com/live2/{ARGS.stream_key}"
-
-    #ffmpeg_command = [
-    #    f"-framerate {ARGS.framerate}",
-    #    f"-g {int(ARGS.framerate) * 2}",
-    #    f"-video_size {WIDTH}x{HEIGHT}",
-    #    "-c:v libx264",
-    #    f"-b:v {ARGS.bitrate}",
-    #    f"-preset {ARGS.preset}",
-    #    "-pix_fmt yuv420p",
-    #    f"-maxrate {ARGS.bitrate}",
-    #    f"-bufsize {ARGS.bufsize}",
-    #    f"-threads {ARGS.threads}",
-    #    "-ignore_unknown",
-    #    "-sn",
-    #    "-f flv",
-    #    stream_url,
-    #]
 
     ffmpeg_command = [
         "-c copy",
@@ -197,10 +179,10 @@ def main():
 
     ffmpeg_string = " ".join(ffmpeg_command)
 
+    # set up picam
     picam2 = Picamera2()
-    video_config = picam2.create_video_configuration(main={"size": (WIDTH, HEIGHT)})
-    video_config["buffer_count"] = 6
-    picam2.configure(video_config)
+    picam2.video_configuration.controls.FrameRate = int(ARGS.framerate)
+    picam2.video_configuration.size = (WIDTH, HEIGHT)
 
     # turns on autofocus if supported
     try:
@@ -213,6 +195,7 @@ def main():
 
     encoder = H264Encoder(bitrate=brstr_to_brint(ARGS.bitrate))
 
+    # with -c copy have to lock the audio_samplerate to 44100, 22050 or 11025, youtube gets sad when it's not 44100
     output = FfmpegOutput(ffmpeg_string, audio=True, audio_samplerate=44100)
 
     picam2.start_recording(encoder, output)
@@ -233,7 +216,6 @@ def main():
 
 if __name__ == "__main__":
     ARGS = get_args()
-    print(ARGS)
     WIDTH = int(ARGS.resolution.split("x")[0])
     HEIGHT = int(ARGS.resolution.split("x")[1])
 

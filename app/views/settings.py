@@ -25,10 +25,6 @@ def v_settings():
         set_conf_from_post("streaming_service", conf.streaming_service)
         set_conf_from_post("resolution", conf.resolution)
         set_conf_from_post("bitrate", conf.bitrate)
-        set_conf_from_post("preset", conf.preset)
-        set_conf_from_post("maxrate", conf.maxrate)
-        set_conf_from_post("bufsize", conf.bufsize)
-        set_conf_from_post("threads", conf.threads)
         set_conf_from_post("framerate", conf.framerate)
         set_conf_from_post("overlay", conf.overlay)
         set_conf_from_post("overlay_url", conf.overlay_url)
@@ -48,12 +44,6 @@ def v_settings():
             conf.resolution,
             "--bitrate",
             conf.bitrate,
-            "--preset",
-            conf.preset,
-            "--bufsize",
-            conf.bufsize,
-            "--threads",
-            conf.threads,
             "--framerate",
             conf.framerate,
             "--overlay",

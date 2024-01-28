@@ -49,60 +49,11 @@
             </div>
 
             <div class="row">
-                <label class="col col-form-label">Preset</label>
-                <div class="col">
-                    <select class="form-select form-select-m w-50" name="preset" id="preset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
-                        {% for preset in options.presets %}
-                        <option value="{{ preset }}" {% if preset==conf.preset %} selected {% endif %}>{{ preset }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            <div class="row">
                 <label class="col col-form-label">Bitrate</label>
                 <div class="col">
                     <select class="form-select form-select-m w-50" name="bitrate" id="bitrate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
                         {% for bitrate in options.bitrates %}
                         <option value="{{ bitrate }}" {% if bitrate==conf.bitrate %} selected {% endif %}>{{ bitrate }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-
-
-            <!-- uses the bitrate list -->
-            <div class="row">
-                <label class="col col-form-label">Maxrate</label>
-                <div class="col">
-                    <select class="form-select form-select-m w-50" name="maxrate" id="maxrate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
-                        {% for bitrate in options.bitrates %}
-                        <option value="{{ bitrate }}" {% if bitrate==conf.maxrate %} selected {% endif %}>{{ bitrate }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            <!-- uses the bitrate list -->
-            <div class="row">
-                <label class="col col-form-label">Bufsize</label>
-                <div class="col">
-                    <select class="form-select form-select-m w-50" name="bufsize" id="bufsize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
-                        {% for bitrate in options.bitrates %}
-                        <option value="{{ bitrate }}" {% if bitrate==conf.bufsize %} selected {% endif %}>{{ bitrate }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-
-            <div class="row">
-                <label class="col col-form-label">Threads</label>
-                <div class="col">
-                    <select class="form-select form-select-m w-50" name="threads" id="threads" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
-                        {% for threads in options.threadses %}
-                        <option value="{{ threads }}" {% if threads==conf.threads %} selected {% endif %}>{{ threads }}</option>
                         {% endfor %}
                     </select>
                 </div>
