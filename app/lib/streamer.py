@@ -83,6 +83,14 @@ def get_args():
         default="30",
     )
 
+    parser.add_argument(
+        "--overlay",
+        required=False,
+        type=str,
+        help="if to add the png overlay on/off",
+        default="off",
+    )
+
     return parser.parse_args()
 
 
@@ -164,19 +172,25 @@ def main():
     elif ARGS.streaming_service == "youtube":
         stream_url = f"rtmp://a.rtmp.youtube.com/live2/{ARGS.stream_key}"
 
+    #ffmpeg_command = [
+    #    f"-framerate {ARGS.framerate}",
+    #    f"-g {int(ARGS.framerate) * 2}",
+    #    f"-video_size {WIDTH}x{HEIGHT}",
+    #    "-c:v libx264",
+    #    f"-b:v {ARGS.bitrate}",
+    #    f"-preset {ARGS.preset}",
+    #    "-pix_fmt yuv420p",
+    #    f"-maxrate {ARGS.bitrate}",
+    #    f"-bufsize {ARGS.bufsize}",
+    #    f"-threads {ARGS.threads}",
+    #    "-ignore_unknown",
+    #    "-sn",
+    #    "-f flv",
+    #    stream_url,
+    #]
+
     ffmpeg_command = [
-        f"-framerate {ARGS.framerate}",
-        f"-g {int(ARGS.framerate) * 2}",
-        f"-video_size {WIDTH}x{HEIGHT}",
-        "-c:v libx264",
-        f"-b:v {ARGS.bitrate}",
-        f"-preset {ARGS.preset}",
-        "-pix_fmt yuv420p",
-        f"-maxrate {ARGS.bitrate}",
-        f"-bufsize {ARGS.bufsize}",
-        f"-threads {ARGS.threads}",
-        "-ignore_unknown",
-        "-sn",
+        "-c copy",
         "-f flv",
         stream_url,
     ]
@@ -194,11 +208,12 @@ def main():
     except RuntimeError as e:
         print(e)
 
-    #picam2.pre_callback = apply_overlay
+    if ARGS.overlay == 'on':
+        picam2.pre_callback = apply_overlay
 
     encoder = H264Encoder(bitrate=brstr_to_brint(ARGS.bitrate))
-    # encoder = Encoder()
-    output = FfmpegOutput(ffmpeg_string, audio=True)
+
+    output = FfmpegOutput(ffmpeg_string, audio=True, audio_samplerate=44100)
 
     picam2.start_recording(encoder, output)
 

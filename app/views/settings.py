@@ -30,6 +30,7 @@ def v_settings():
         set_conf_from_post("bufsize", conf.bufsize)
         set_conf_from_post("threads", conf.threads)
         set_conf_from_post("framerate", conf.framerate)
+        set_conf_from_post("overlay", conf.overlay)
         set_conf_from_post("overlay_url", conf.overlay_url)
         set_conf_from_post("streaming", "off")
 
@@ -55,6 +56,8 @@ def v_settings():
             conf.threads,
             "--framerate",
             conf.framerate,
+            "--overlay",
+            conf.overlay
         ]
 
         streaming_process = subprocess.Popen(commands)

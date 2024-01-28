@@ -31,7 +31,8 @@ class Config(object):
                 "veryslow",
             ],
             "framerates": ["30", "60"],
-            "threadses": ["1","2","3", "4", "5", "6", "7", "8"]
+            "threadses": ["1","2","3", "4", "5", "6", "7", "8"],
+            "overlay": ["on", "off"]
         }
 
     def __str__(self):
@@ -136,6 +137,16 @@ class Config(object):
     @threads.setter
     def threads(self, value):
         self._data["threads"] = value
+        self._write_config()
+
+    ## Overlay
+    @property
+    def overlay(self):
+        return self._data["overlay"]
+
+    @overlay.setter
+    def overlay(self, value):
+        self._data["overlay"] = value
         self._write_config()
 
     ## Overlay URL

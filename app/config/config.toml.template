@@ -29,6 +29,9 @@ bufsize = "15M"
 ## threads(cpu cores) that ffmpeg can use
 threads = "4"
 
+# Overlay on/off
+overlay = "off"
+
 # PNG that will be overlayed on the video stream
 # image will be downloaded every 30 seconds so if the image changes it will automatically update the stream
 overlay_url = ""
