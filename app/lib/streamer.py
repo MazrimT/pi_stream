@@ -8,6 +8,7 @@ import time
 import os
 from libcamera import controls
 import threading
+import numpy as np
 
 def get_args():
     parser = argparse.ArgumentParser(description="Parse arguments")
@@ -95,17 +96,22 @@ def get_args():
 
 
 def apply_overlay(request):
+
     with MappedArray(request, "main") as m:
         frame = m.array
         # Overlay the image
-        for c in range(0, 3):
-            frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c] = (
-                OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c]
-                + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
-            )
+        #for c in range(0, 3):
+        #    frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c] = (
+        #        OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c]
+        #        + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
+        #    )
+        frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH] = (
+            OVERLAY_ALPHA_MASK * OVERLAY_COLOR + (1 - OVERLAY_ALPHA_MASK) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH]
+        )
 
 
 def update_overlay():
+
     global OVERLAY_IMAGE
     global OVERLAY_WIDTH
     global OVERLAY_HEIGHT
@@ -113,6 +119,7 @@ def update_overlay():
     global OVERLAY_ALPHA
     global OVERLAY_IMAGE_PATH
     global OVERLAY_UPDATE_DELAY
+    global OVERLAY_ALPHA_MASK
 
     while True:
         overlay_image = cv2.imread(OVERLAY_IMAGE_PATH, cv2.IMREAD_UNCHANGED)
@@ -136,19 +143,24 @@ def update_overlay():
         if overlay_image.shape[2] == 4:  # If the image has 4 channels
             overlay_color = cv2.cvtColor(overlay_color, cv2.COLOR_BGR2RGB)
 
-            (
-                OVERLAY_IMAGE,
-                OVERLAY_WIDTH,
-                OVERLAY_HEIGHT,
-                OVERLAY_COLOR,
-                OVERLAY_ALPHA,
-            ) = (
-                overlay_image,
-                overlay_width,
-                overlay_height,
-                overlay_color,
-                overlay_alpha,
-            )
+        overlay_alpha_mask = OVERLAY_ALPHA * np.ones((OVERLAY_HEIGHT, OVERLAY_WIDTH, 3))
+
+
+        (
+            OVERLAY_IMAGE,
+            OVERLAY_WIDTH,
+            OVERLAY_HEIGHT,
+            OVERLAY_COLOR,
+            OVERLAY_ALPHA,
+            OVERLAY_ALPHA_MASK,
+        ) = (
+            overlay_image,
+            overlay_width,
+            overlay_height,
+            overlay_color,
+            overlay_alpha,
+            overlay_alpha_mask
+        )
 
         if STOP_OVERLAY_UPDATE_THREAD:
             break
@@ -230,6 +242,7 @@ if __name__ == "__main__":
     OVERLAY_HEIGHT = None
     OVERLAY_COLOR = None
     OVERLAY_ALPHA = None
+    OVERLAY_ALPHA_MASK = None
     OVERLAY_UPDATE_DELAY = 10
     STOP_OVERLAY_UPDATE_THREAD = False
 
