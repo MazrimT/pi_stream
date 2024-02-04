@@ -100,20 +100,19 @@ def apply_overlay(request):
     with MappedArray(request, "main") as m:
         frame = m.array
 
-        frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :3] = (
-            OVERLAY_ALPHA_MASK * OVERLAY_COLOR + (1 - OVERLAY_ALPHA_MASK) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :3]
-        )
 
+        for c in range(0, 3):
+            frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c] = (
+                OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c]
+                + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
+            )
 
 def update_overlay():
 
     global OVERLAY_WIDTH
     global OVERLAY_HEIGHT
     global OVERLAY_COLOR
-    global OVERLAY_ALPHA_MASK
-    global OVERLAY_IMAGE_PATH
-    global OVERLAY_UPDATE_DELAY
-
+    global OVERLAY_ALPHA
 
     while True:
         overlay_image = cv2.imread(OVERLAY_IMAGE_PATH, cv2.IMREAD_UNCHANGED)
@@ -135,23 +134,19 @@ def update_overlay():
         overlay_color = overlay_image[:, :, :3]
         overlay_alpha = overlay_image[:, :, 3] / 255.0
 
-        overlay_color_channels = overlay_image.shape[2]
-
-        if overlay_color_channels == 4:  # If the image has 4 channels
+        if overlay_image.shape[2] == 4:  # If the image has 4 channels
             overlay_color = cv2.cvtColor(overlay_color, cv2.COLOR_BGR2RGB)
-
-        overlay_alpha_mask = overlay_alpha[:, :, np.newaxis] * np.ones((overlay_height, overlay_width, 3))
 
         (
             OVERLAY_WIDTH,
             OVERLAY_HEIGHT,
             OVERLAY_COLOR,
-            OVERLAY_ALPHA_MASK
+            OVERLAY_ALPHA
         ) = (
             overlay_width,
             overlay_height,
             overlay_color,
-            overlay_alpha_mask
+            overlay_alpha
         )
 
         if STOP_OVERLAY_UPDATE_THREAD:
@@ -234,7 +229,7 @@ if __name__ == "__main__":
     OVERLAY_WIDTH = None
     OVERLAY_HEIGHT = None
     OVERLAY_COLOR = None
-    OVERLAY_ALPHA_MASK = None
+    OVERLAY_ALPHA = None
     OVERLAY_UPDATE_DELAY = 10
     STOP_OVERLAY_UPDATE_THREAD = False
 
