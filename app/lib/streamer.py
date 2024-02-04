@@ -154,12 +154,6 @@ def update_overlay():
 
         time.sleep(OVERLAY_UPDATE_DELAY)
 
-def brstr_to_brint(brstr):
-
-    brint = int(brstr.replace('M', "000000").replace('k', "000"))
-
-    return brint
-
 def main():
     global STOP_OVERLAY_UPDATE_THREAD
 
@@ -195,7 +189,8 @@ def main():
     if ARGS.overlay == 'on':
         picam2.pre_callback = apply_overlay
 
-    encoder = H264Encoder(bitrate=brstr_to_brint(ARGS.bitrate))
+    bitrate_int = int(ARGS.bitrate.replace('M', "000000").replace('k', "000"))
+    encoder = H264Encoder(bitrate=bitrate_int)
 
     # with -c copy have to lock the audio_samplerate to 44100, 22050 or 11025, youtube gets sad when it's not 44100
     output = FfmpegOutput(ffmpeg_string, audio=True, audio_samplerate=44100)
