@@ -100,12 +100,12 @@ def apply_overlay(request):
     with MappedArray(request, "main") as m:
         frame = m.array
 
-
         for c in range(0, 3):
             frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c] = (
                 OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c]
                 + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
             )
+
 
 def update_overlay():
 
@@ -116,10 +116,10 @@ def update_overlay():
 
     while True:
         overlay_image = cv2.imread(OVERLAY_IMAGE_PATH, cv2.IMREAD_UNCHANGED)
-        overlay_height, overlay_width = overlay_image.shape[
-            :2
-        ]  # for some reason height first in the array
+        # for some reason height first in the array
+        overlay_height, overlay_width = overlay_image.shape[:2]
         resize_overaly = False
+
         if overlay_width > WIDTH:
             overlay_width = WIDTH
             resize_overaly = True
@@ -137,22 +137,24 @@ def update_overlay():
         if overlay_image.shape[2] == 4:  # If the image has 4 channels
             overlay_color = cv2.cvtColor(overlay_color, cv2.COLOR_BGR2RGB)
 
+        # set all at once otherwise the camera might get a missmatch between old and new values
         (
             OVERLAY_WIDTH,
             OVERLAY_HEIGHT,
             OVERLAY_COLOR,
-            OVERLAY_ALPHA
+            OVERLAY_ALPHA,
         ) = (
             overlay_width,
             overlay_height,
             overlay_color,
-            overlay_alpha
+            overlay_alpha,
         )
 
         if STOP_OVERLAY_UPDATE_THREAD:
             break
 
         time.sleep(OVERLAY_UPDATE_DELAY)
+
 
 def main():
     global STOP_OVERLAY_UPDATE_THREAD
@@ -229,4 +231,5 @@ if __name__ == "__main__":
     STOP_OVERLAY_UPDATE_THREAD = False
 
 
+if __name__ == '__main__':
     main()
