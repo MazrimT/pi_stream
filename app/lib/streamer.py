@@ -9,6 +9,7 @@ import os
 from libcamera import controls
 import threading
 import numpy as np
+import sys
 
 def get_args():
     parser = argparse.ArgumentParser(description="Parse arguments")
@@ -32,48 +33,16 @@ def get_args():
         "--resolution",
         required=False,
         type=str,
-        help="Streaming resolution, default 1280x720",
-        default="1280x720",
+        help="Streaming resolution, default 1920x1080",
+        default="1920x1080",
     )
 
     parser.add_argument(
         "--bitrate",
         required=False,
         type=str,
-        help="Stream and video bitrate bps, default 15M",
-        default="15M",
-    )
-
-    parser.add_argument(
-        "--preset",
-        required=False,
-        type=str,
-        help="ultrafast/superfast/veryfast/faster/fast/medium/slow/veryslow, default veryfast",
-        default="veryfast",
-    )
-
-    parser.add_argument(
-        "--maxrate",
-        required=False,
-        type=str,
-        help="Max stream bitrate bps, default 15M",
-        default="15M",
-    )
-
-    parser.add_argument(
-        "--bufsize",
-        required=False,
-        type=str,
-        help="Buffer Size bps, default 15M",
-        default="15M",
-    )
-
-    parser.add_argument(
-        "--threads",
-        required=False,
-        type=str,
-        help="Threads for ffmpeg, default 4",
-        default="4",
+        help="Stream and video bitrate bps, default 6800k",
+        default="6800k",
     )
 
     parser.add_argument(
@@ -89,7 +58,7 @@ def get_args():
         required=False,
         type=str,
         help="if to add the png overlay on/off",
-        default="off",
+        default="on",
     )
 
     return parser.parse_args()
@@ -98,14 +67,38 @@ def get_args():
 def apply_overlay(request):
 
     with MappedArray(request, "main") as m:
+
         frame = m.array
+        #print("Incoming frame shape: ", frame.shape)
+        #print("color overlay shape: ", OVERLAY_COLOR.shape)
 
-        for c in range(0, 3):
-            frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c] = (
-                OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c]
-                + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
-            )
+        #print("frame shape: ", frame.shape)
 
+        #for c in range(0, 3):
+        #    frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c] = (
+        #        OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c]
+        #        + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
+        #    )
+
+
+        #frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :] = (
+        #    OVERLAY_ALPHA * OVERLAY_COLOR[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :] +
+        #    (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :]
+        #)
+
+
+
+        frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :] = np.stack(
+            tuple(
+
+                (
+                    OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c]
+                    + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
+                )
+                for c in range(4)
+            ),
+            axis=-1
+        )
 
 def update_overlay():
 
@@ -115,7 +108,12 @@ def update_overlay():
     global OVERLAY_ALPHA
 
     while True:
+
+        if STOP_OVERLAY_UPDATE_THREAD:
+            break
+
         overlay_image = cv2.imread(OVERLAY_IMAGE_PATH, cv2.IMREAD_UNCHANGED)
+
         # for some reason height first in the array
         overlay_height, overlay_width = overlay_image.shape[:2]
         resize_overaly = False
@@ -131,13 +129,13 @@ def update_overlay():
         if resize_overaly:
             overlay_image = cv2.resize(overlay_image, (overlay_width, overlay_height))
 
-        overlay_color = overlay_image[:, :, :3]
+
+        overlay_color = overlay_image[:, :, :]
         overlay_alpha = overlay_image[:, :, 3] / 255.0
 
         if overlay_image.shape[2] == 4:  # If the image has 4 channels
-            overlay_color = cv2.cvtColor(overlay_color, cv2.COLOR_BGR2RGB)
+            overlay_color = cv2.cvtColor(overlay_color, cv2.COLOR_BGR2RGBA)
 
-        # set all at once otherwise the camera might get a missmatch between old and new values
         (
             OVERLAY_WIDTH,
             OVERLAY_HEIGHT,
@@ -148,10 +146,8 @@ def update_overlay():
             overlay_height,
             overlay_color,
             overlay_alpha,
-        )
 
-        if STOP_OVERLAY_UPDATE_THREAD:
-            break
+        )
 
         time.sleep(OVERLAY_UPDATE_DELAY)
 
@@ -213,23 +209,21 @@ def main():
         picam2.close()
 
 
+ARGS = get_args()
+WIDTH = int(ARGS.resolution.split("x")[0])
+HEIGHT = int(ARGS.resolution.split("x")[1])
+
+# overlay variables
+OVERLAY_IMAGE_PATH = (
+    os.path.dirname(os.path.realpath(__file__)) + "/../static/images/overlay.png"
+)
+OVERLAY_WIDTH = None
+OVERLAY_HEIGHT = None
+OVERLAY_COLOR = None
+OVERLAY_ALPHA = None
+OVERLAY_UPDATE_DELAY = 10
+STOP_OVERLAY_UPDATE_THREAD = False
+
 if __name__ == "__main__":
-    ARGS = get_args()
-    WIDTH = int(ARGS.resolution.split("x")[0])
-    HEIGHT = int(ARGS.resolution.split("x")[1])
 
-    # overlay variables
-    OVERLAY_IMAGE_PATH = (
-        os.path.dirname(os.path.realpath(__file__)) + "/../static/images/overlay.png"
-    )
-
-    OVERLAY_WIDTH = None
-    OVERLAY_HEIGHT = None
-    OVERLAY_COLOR = None
-    OVERLAY_ALPHA = None
-    OVERLAY_UPDATE_DELAY = 10
-    STOP_OVERLAY_UPDATE_THREAD = False
-
-
-if __name__ == '__main__':
     main()

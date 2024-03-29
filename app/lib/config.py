@@ -18,7 +18,7 @@ class Config(object):
         self.options = {
             "streaming_services": ["youtube", "twitch"],
             "resolutions": ["1920x1080", "1280x720", "640x480"],
-            "bitrates": ["500k", "1M", "2M", "4M", "6M", "10M", "12M", "15M", "20M", "25M", "50M", "100M"],
+            "bitrates": ["6800k"], #"500k", "1M", "2M", "4M", "6M", "10M", "12M", "15M", "20M", "25M", "50M", "100M"],
             "framerates": ["30", "60"],
             "overlay": ["on", "off"]
         }
