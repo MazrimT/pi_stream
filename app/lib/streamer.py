@@ -9,7 +9,6 @@ import os
 from libcamera import controls
 import threading
 import numpy as np
-import sys
 
 def get_args():
     parser = argparse.ArgumentParser(description="Parse arguments")
@@ -69,24 +68,6 @@ def apply_overlay(request):
     with MappedArray(request, "main") as m:
 
         frame = m.array
-        #print("Incoming frame shape: ", frame.shape)
-        #print("color overlay shape: ", OVERLAY_COLOR.shape)
-
-        #print("frame shape: ", frame.shape)
-
-        #for c in range(0, 3):
-        #    frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c] = (
-        #        OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c]
-        #        + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
-        #    )
-
-
-        #frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :] = (
-        #    OVERLAY_ALPHA * OVERLAY_COLOR[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :] +
-        #    (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :]
-        #)
-
-
 
         frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :] = np.stack(
             tuple(
@@ -118,6 +99,7 @@ def update_overlay():
         overlay_height, overlay_width = overlay_image.shape[:2]
         resize_overaly = False
 
+        # resize the image if it's bigger than the camera dimensions
         if overlay_width > WIDTH:
             overlay_width = WIDTH
             resize_overaly = True
@@ -129,12 +111,14 @@ def update_overlay():
         if resize_overaly:
             overlay_image = cv2.resize(overlay_image, (overlay_width, overlay_height))
 
-
+        # separate out color and alpha
         overlay_color = overlay_image[:, :, :]
         overlay_alpha = overlay_image[:, :, 3] / 255.0
 
-        if overlay_image.shape[2] == 4:  # If the image has 4 channels
+         # If the image has 4 channels needs to be convertedto RGBA
+        if overlay_image.shape[2] == 4:
             overlay_color = cv2.cvtColor(overlay_color, cv2.COLOR_BGR2RGBA)
+
 
         (
             OVERLAY_WIDTH,
