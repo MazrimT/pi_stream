@@ -69,23 +69,27 @@ def apply_overlay(request):
 
         frame = m.array
 
-        frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :] = np.stack(
+        # this is a bit complicated and unfortunatly the most efficient way to do it.
+        # The first three color channels in the frame needs to be updated with info from the overlay taking into account the transparency/alpha layer from the overlay.
+        # doing this as comprehension tuple is more efficient than a doing it in a normal for loop and since we need to do this for every frame all optimization possible is needed.
+        # at the end np.stack(tuple(), axis=1) turns it all back into the same format as a frame.
+        frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :3] = np.stack(
             tuple(
-
                 (
-                    OVERLAY_ALPHA * OVERLAY_COLOR[:, :, c]
+                    OVERLAY_ALPHA * OVERLAY_IMAGE[:, :, c]
                     + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
                 )
-                for c in range(4)
+                for c in range(0, 3)
             ),
             axis=-1
         )
+
 
 def update_overlay():
 
     global OVERLAY_WIDTH
     global OVERLAY_HEIGHT
-    global OVERLAY_COLOR
+    global OVERLAY_IMAGE
     global OVERLAY_ALPHA
 
     while True:
@@ -93,42 +97,35 @@ def update_overlay():
         if STOP_OVERLAY_UPDATE_THREAD:
             break
 
+        # read t he image
         overlay_image = cv2.imread(OVERLAY_IMAGE_PATH, cv2.IMREAD_UNCHANGED)
+
+        # convert to BRGA to match picamera output.
+        # This will convert any 3 or 4 color channel image, grayscale might not work
+        overlay_image = cv2.cvtColor(overlay_image, cv2.COLOR_RGB2BGRA)
 
         # for some reason height first in the array
         overlay_height, overlay_width = overlay_image.shape[:2]
-        resize_overaly = False
 
-        # resize the image if it's bigger than the camera dimensions
-        if overlay_width > WIDTH:
-            overlay_width = WIDTH
-            resize_overaly = True
+        resize_overlay = True if overlay_width > WIDTH or overlay_height > HEIGHT else False
+        overlay_width = WIDTH if overlay_width > WIDTH else overlay_width
+        overlay_height = HEIGHT if overlay_height > HEIGHT else overlay_height
 
-        if overlay_height > HEIGHT:
-            overlay_height = HEIGHT
-            resize_overaly = True
-
-        if resize_overaly:
+        if resize_overlay:
             overlay_image = cv2.resize(overlay_image, (overlay_width, overlay_height))
 
-        # separate out color and alpha
-        overlay_color = overlay_image[:, :, :]
+        # break out alpha to separate variable it is needed and more effiient to do once rather than for every frame
         overlay_alpha = overlay_image[:, :, 3] / 255.0
-
-         # If the image has 4 channels needs to be convertedto RGBA
-        if overlay_image.shape[2] == 4:
-            overlay_color = cv2.cvtColor(overlay_color, cv2.COLOR_BGR2RGBA)
-
 
         (
             OVERLAY_WIDTH,
             OVERLAY_HEIGHT,
-            OVERLAY_COLOR,
+            OVERLAY_IMAGE,
             OVERLAY_ALPHA,
         ) = (
             overlay_width,
             overlay_height,
-            overlay_color,
+            overlay_image,
             overlay_alpha,
 
         )
@@ -166,7 +163,7 @@ def main():
     try:
         picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
     except RuntimeError as e:
-        print(e)
+        print("Autofocus not supported on this camera")
 
     if ARGS.overlay == 'on':
         picam2.pre_callback = apply_overlay
@@ -183,7 +180,6 @@ def main():
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        # Handle any cleanup here
         pass
     finally:
         print("Safely stopping stream, please wait")
@@ -203,7 +199,7 @@ OVERLAY_IMAGE_PATH = (
 )
 OVERLAY_WIDTH = None
 OVERLAY_HEIGHT = None
-OVERLAY_COLOR = None
+OVERLAY_IMAGE = None
 OVERLAY_ALPHA = None
 OVERLAY_UPDATE_DELAY = 10
 STOP_OVERLAY_UPDATE_THREAD = False
