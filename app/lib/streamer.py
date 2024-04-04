@@ -3,12 +3,13 @@ import argparse
 from picamera2.encoders import H264Encoder
 from picamera2.outputs import FfmpegOutput
 from picamera2 import Picamera2, MappedArray
-import cv2
 import time
 import os
 from libcamera import controls
 import threading
 import numpy as np
+from PIL import Image as im
+
 
 def get_args():
     parser = argparse.ArgumentParser(description="Parse arguments")
@@ -68,27 +69,13 @@ def apply_overlay(request):
     with MappedArray(request, "main") as m:
 
         frame = m.array
-
-        # this is a bit complicated and unfortunatly the most efficient way to do it.
-        # The first three color channels in the frame needs to be updated with info from the overlay taking into account the transparency/alpha layer from the overlay.
-        # doing this as comprehension tuple is more efficient than a doing it in a normal for loop and since we need to do this for every frame all optimization possible is needed.
-        # at the end np.stack(tuple(), axis=1) turns it all back into the same format as a frame.
-        frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, :3] = np.stack(
-            tuple(
-                (
-                    OVERLAY_ALPHA * OVERLAY_IMAGE[:, :, c]
-                    + (1 - OVERLAY_ALPHA) * frame[0:OVERLAY_HEIGHT, 0:OVERLAY_WIDTH, c]
-                )
-                for c in range(0, 3)
-            ),
-            axis=-1
-        )
+        image = im.fromarray(frame)
+        image.paste(OVERLAY_IMAGE, (0, 0), OVERLAY_ALPHA)
+        frame[:] = np.asarray(image)
 
 
 def update_overlay():
 
-    global OVERLAY_WIDTH
-    global OVERLAY_HEIGHT
     global OVERLAY_IMAGE
     global OVERLAY_ALPHA
 
@@ -97,40 +84,20 @@ def update_overlay():
         if STOP_OVERLAY_UPDATE_THREAD:
             break
 
-        # read t he image
-        overlay_image = cv2.imread(OVERLAY_IMAGE_PATH, cv2.IMREAD_UNCHANGED)
+        overlay_image = im.open(OVERLAY_IMAGE_PATH).convert('RGBA')
 
-        # convert to BRGA to match picamera output.
-        # This will convert any 3 or 4 color channel image, grayscale might not work
-        overlay_image = cv2.cvtColor(overlay_image, cv2.COLOR_RGB2BGRA)
-
-        # for some reason height first in the array
-        overlay_height, overlay_width = overlay_image.shape[:2]
-
-        resize_overlay = True if overlay_width > WIDTH or overlay_height > HEIGHT else False
-        overlay_width = WIDTH if overlay_width > WIDTH else overlay_width
-        overlay_height = HEIGHT if overlay_height > HEIGHT else overlay_height
+        resize_overlay = True if overlay_image.width > WIDTH or overlay_image.height > HEIGHT else False
 
         if resize_overlay:
-            overlay_image = cv2.resize(overlay_image, (overlay_width, overlay_height))
+            overlay_width = WIDTH if overlay_image.width > WIDTH else overlay_image.width
+            overlay_height = HEIGHT if overlay_image.height > HEIGHT else overlay_image.height
+            overlay_image.resize(overlay_width, overlay_height)
 
-        # break out alpha to separate variable it is needed and more effiient to do once rather than for every frame
-        overlay_alpha = overlay_image[:, :, 3] / 255.0
-
-        (
-            OVERLAY_WIDTH,
-            OVERLAY_HEIGHT,
-            OVERLAY_IMAGE,
-            OVERLAY_ALPHA,
-        ) = (
-            overlay_width,
-            overlay_height,
-            overlay_image,
-            overlay_alpha,
-
-        )
+        # set both at the same time so we don't try to apply missmatching values if the image changes
+        OVERLAY_IMAGE, OVERLAY_ALPHA = overlay_image, overlay_image.getchannel('A')
 
         time.sleep(OVERLAY_UPDATE_DELAY)
+
 
 
 def main():
@@ -162,6 +129,7 @@ def main():
     # turns on autofocus if supported
     try:
         picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
+
     except RuntimeError as e:
         print("Autofocus not supported on this camera")
 
@@ -197,8 +165,6 @@ HEIGHT = int(ARGS.resolution.split("x")[1])
 OVERLAY_IMAGE_PATH = (
     os.path.dirname(os.path.realpath(__file__)) + "/../static/images/overlay.png"
 )
-OVERLAY_WIDTH = None
-OVERLAY_HEIGHT = None
 OVERLAY_IMAGE = None
 OVERLAY_ALPHA = None
 OVERLAY_UPDATE_DELAY = 10
