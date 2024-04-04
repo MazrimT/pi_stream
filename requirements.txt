@@ -3,4 +3,4 @@ Bootstrap-Flask
 tomlkit
 flask-login
 python-dotenv
-opencv-python
+pillow
