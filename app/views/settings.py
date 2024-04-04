@@ -31,7 +31,6 @@ def v_settings():
         set_conf_from_post("overlay_url", conf.overlay_url)
         set_conf_from_post("streaming", "off")
 
-        print(request.form)
     # if starting to stream
     if conf.streaming == "on" and not conf.stream_process_id:
         commands = [
