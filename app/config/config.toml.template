@@ -18,7 +18,7 @@ framerate = "30"
 bitrate = "6800k"
 
 ## threads for ffmpeg
-threads = "4"
+threads = "2"
 
 ## Overlay on/off
 overlay = "off"
