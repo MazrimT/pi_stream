@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, redirect, url_for
 # from flask_login import LoginManager, UserMixin, login_user, logout_user
 from flask_bootstrap import Bootstrap5
 import os
-import sys
 from app.lib.config import Config
 
 # import views

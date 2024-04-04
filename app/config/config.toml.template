@@ -14,10 +14,13 @@ resolution = "1280x720"
 ## camera framerate
 framerate = "30"
 
-## ecoder  bitrate
-bitrate = "15M"
+## encoder  bitrate
+bitrate = "6800k"
 
-# Overlay on/off
+## threads for ffmpeg
+threads = "4"
+
+## Overlay on/off
 overlay = "off"
 
 # PNG that will be overlayed on the video stream

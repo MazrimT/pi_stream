@@ -60,6 +60,17 @@
             </div>
 
             <div class="row">
+                <label class="col col-form-label">Threads</label>
+                <div class="col">
+                    <select class="form-select form-select-m w-50" name="threads" id="threads" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
+                        {% for thread in options.threads %}
+                        <option value="{{ thread }}" {% if thread==conf.threads %} selected {% endif %}>{{ thread }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
                 <label class="col col-form-label">Overlay</label>
                 <div class="col">
                     <select class="form-select form-select-m w-50" name="overlay" id="overlay" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
@@ -103,4 +114,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}

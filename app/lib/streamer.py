@@ -54,6 +54,14 @@ def get_args():
     )
 
     parser.add_argument(
+        "--threads",
+        required=False,
+        type=str,
+        help="nr of threads for ffmpeg",
+        default="4",
+    )
+
+    parser.add_argument(
         "--overlay",
         required=False,
         type=str,
@@ -68,10 +76,9 @@ def apply_overlay(request):
 
     with MappedArray(request, "main") as m:
 
-        frame = m.array
-        image = im.fromarray(frame)
+        image = im.fromarray(m.array)
         image.paste(OVERLAY_IMAGE, (0, 0), OVERLAY_ALPHA)
-        frame[:] = np.asarray(image)
+        m.array[:] = np.asarray(image)
 
 
 def update_overlay():
@@ -91,13 +98,12 @@ def update_overlay():
         if resize_overlay:
             overlay_width = WIDTH if overlay_image.width > WIDTH else overlay_image.width
             overlay_height = HEIGHT if overlay_image.height > HEIGHT else overlay_image.height
-            overlay_image.resize(overlay_width, overlay_height)
+            overlay_image = overlay_image.resize(overlay_width, overlay_height)
 
         # set both at the same time so we don't try to apply missmatching values if the image changes
         OVERLAY_IMAGE, OVERLAY_ALPHA = overlay_image, overlay_image.getchannel('A')
 
         time.sleep(OVERLAY_UPDATE_DELAY)
-
 
 
 def main():
@@ -113,7 +119,7 @@ def main():
         stream_url = f"rtmp://a.rtmp.youtube.com/live2/{ARGS.stream_key}"
 
     ffmpeg_command = [
-        "-threads 4",
+        f"-threads {ARGS.threads}",
         "-c copy",
         "-f flv",
         stream_url,

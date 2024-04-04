@@ -26,28 +26,24 @@ def v_settings():
         set_conf_from_post("resolution", conf.resolution)
         set_conf_from_post("bitrate", conf.bitrate)
         set_conf_from_post("framerate", conf.framerate)
+        set_conf_from_post("threads", conf.threads)
         set_conf_from_post("overlay", conf.overlay)
         set_conf_from_post("overlay_url", conf.overlay_url)
         set_conf_from_post("streaming", "off")
 
-
+        print(request.form)
     # if starting to stream
     if conf.streaming == "on" and not conf.stream_process_id:
         commands = [
             current_app.config["PYTHON_EXECUTABLE"],
             f"{current_app.root_path}/lib/streamer.py",
-            "--streaming_service",
-            conf.streaming_service,
-            "--stream_key",
-            conf.stream_key,
-            "--resolution",
-            conf.resolution,
-            "--bitrate",
-            conf.bitrate,
-            "--framerate",
-            conf.framerate,
-            "--overlay",
-            conf.overlay
+            "--streaming_service", conf.streaming_service,
+            "--stream_key", conf.stream_key,
+            "--resolution", conf.resolution,
+            "--bitrate", conf.bitrate,
+            "--framerate", conf.framerate,
+            "--threads", conf.threads,
+            "--overlay", conf.overlay
         ]
 
         streaming_process = subprocess.Popen(commands)
