@@ -119,8 +119,7 @@ def main():
         stream_url = f"rtmp://a.rtmp.youtube.com/live2/{ARGS.stream_key}"
 
     ffmpeg_command = [
-        f"-threads {ARGS.threads}",
-        "-c copy",
+      #  f"-threads {ARGS.threads}",
         "-f flv",
         stream_url,
     ]
