@@ -89,14 +89,7 @@
             </div>
 
 
-            <div class="row">
-                <label class="col col-form-label">Streaming</label>
-                <div class="col">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input w-10" type="checkbox" role="switch" id="streaming" name="streaming" {% if conf.streaming=="on" %}checked{% endif %}>
-                    </div>
-                </div>
-            </div>
+
 
         </div>
     </div>
@@ -106,13 +99,22 @@
     </div>
 
 </form>
+<br>
+<form method="POST" action="" class="container">
+    <div class="row-sm">
+        <div class="col">
+            {% if conf.streaming=="off" %}<button type="submit" class="btn btn-primary" id="streaming" name="streaming" value="on">Start streaming</button>
+            {% else %}<button type="submit" class="btn btn-primary" id="streaming" name="streaming" value="off">End streaming</button>{% endif %}
+
+        </div>
+    </div>
+</form>
+<br>
 <div class="container">
     <div class="col">
-        <br>
         <div class="row-sm">
             <a type="button" class="btn btn-secondary" href="{{ url_for('logout.logout') }}">Log out</a>
         </div>
     </div>
 </div>
-
 {% endblock %}

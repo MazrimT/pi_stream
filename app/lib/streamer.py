@@ -122,7 +122,7 @@ def main():
         stream_url = f"rtmp://a.rtmp.youtube.com/live2/{ARGS.stream_key}"
 
     ffmpeg_command = [
-      #  f"-threads {ARGS.threads}",
+        f"-r {ARGS.framerate}",
         "-f flv",
         stream_url,
     ]
@@ -141,7 +141,11 @@ def main():
     # turns on autofocus if supported
     try:
         print("Setting autofocus")
-        picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
+        picam2.set_controls(
+            {
+                "AfMode": controls.AfModeEnum.Continuous
+            }
+        )
         print("Autofocus set")
     except Exception as e:
         print("Autofocus not supported on this camera")
