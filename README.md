@@ -38,17 +38,20 @@ git clone git@github.com:MazrimT/pi_stream.git
 ```bash
 sudo apt install -y python3-picamera2 --no-install-recommends
 ```
-## install ffmpeg
+## install FFmpeg
 The streaming requires ffmpeg
 ```bash
 sudo apt install ffmpeg
 ```
 
-## set PULSE_RUNTIME_PATH
-set up an environment variable:
-`PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/"`
-Many ways to do this but one example is to put it in users home dir .bash_profile file
-This is a requirement for "no audio" to work.
+## install Pulseaudio
+PulseAudio is needed for the application, even if no audio is used.
+```bash
+sudo apt install -y pulseaudio
+```
+An environment variable is needed: `PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/"`
+There are different ways to acomplish this but for example add to the end of `~/.bashrc` or `~/.bash_profile`:
+`export PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/"`
 
 ## Setup things for Python
 

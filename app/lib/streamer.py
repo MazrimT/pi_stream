@@ -109,8 +109,11 @@ def update_overlay():
 def main():
     global STOP_OVERLAY_UPDATE_THREAD
 
+    print("Starting overlay thread")
     update_overlay_thread = threading.Thread(target=update_overlay)
     update_overlay_thread.start()
+    print("Ooverlay thread started")
+
     # a short sleep so that the overlay has time to get set
     time.sleep(1)
     if ARGS.streaming_service == "twitch":
@@ -126,28 +129,47 @@ def main():
 
     ffmpeg_string = " ".join(ffmpeg_command)
 
+    print("Setting up picam")
     # set up picam
     picam2 = Picamera2()
+    print("Setting frame rate")
     picam2.video_configuration.controls.FrameRate = int(ARGS.framerate)
+    print("Setting height and width")
     picam2.video_configuration.size = (WIDTH, HEIGHT)
+
 
     # turns on autofocus if supported
     try:
+        print("Setting autofocus")
         picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
-
-    except RuntimeError as e:
+        print("Autofocus set")
+    except Exception as e:
         print("Autofocus not supported on this camera")
 
+    print("Setting up pre_callback")
     if ARGS.overlay == 'on':
         picam2.pre_callback = apply_overlay
+        print("pre_callback set")
 
+    #converting bitrate
+    print("Converting bitrate")
     bitrate_int = int(ARGS.bitrate.replace('M', "000000").replace('k', "000"))
+
+    # setting up encoder
+    print("Setting up encoder")
     encoder = H264Encoder(bitrate=bitrate_int)
 
     # with -c copy have to lock the audio_samplerate to 44100, 22050 or 11025, youtube gets sad when it's not 44100
+    print("Setting up ffmpeg output")
     output = FfmpegOutput(ffmpeg_string, audio=True, audio_samplerate=44100)
 
-    picam2.start_recording(encoder, output)
+    # starting recording
+    print("Starting recording")
+    try:
+        picam2.start_recording(encoder, output)
+    except Exception as e:
+        print(e)
+        raise
 
     try:
         while True:
