@@ -9,7 +9,7 @@ import threading
 import numpy as np
 from PIL import Image as im
 from pathlib import Path
-
+import sys
 
 def get_args():
     parser = argparse.ArgumentParser(description="Parse arguments")
@@ -193,7 +193,7 @@ WIDTH = int(ARGS.resolution.split("x")[0])
 HEIGHT = int(ARGS.resolution.split("x")[1])
 
 # overlay variables
-OVERLAY_IMAGE_PATH = Path(__file__).parent.joinpath("/../static/images/current_overlay.png").resolve().as_posix()
+OVERLAY_IMAGE_PATH = Path(__file__).parent.parent.joinpath("static/images/current_overlay.png").as_posix()
 OVERLAY_IMAGE = None
 OVERLAY_ALPHA = None
 OVERLAY_UPDATE_DELAY = 10

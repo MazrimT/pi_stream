@@ -6,7 +6,7 @@ import shutil
 def download_overlay():
 
     current_path = Path(__file__).parent
-    image_path = current_path.joinpath("../static/images").resolve()
+    image_path = current_path.parent.joinpath("static/images")
     default_overlay_path = image_path.joinpath("default_overlay.png")
     current_overlay_path = image_path.joinpath("current_overlay.png")
 
@@ -26,7 +26,7 @@ def download_overlay():
 
         else:
             # we make sure the current_overlay = default overlay
-            shutil.copyfile(src=default_overlay_path, dest=current_overlay_path)
+            shutil.copyfile(src=default_overlay_path, dst=current_overlay_path)
 
 if __name__ == '__main__':
 

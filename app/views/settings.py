@@ -12,10 +12,8 @@ settings = Blueprint("settings", __name__)
 def v_settings():
 
     def set_conf_from_post(key, fallback) -> None:
-        if request.form.get(key):
-            setattr(conf, key, request.form[key])
-        else:
-            setattr(conf, key, fallback)
+        setattr(conf, key, request.form.get(key, fallback))
+
 
     conf = current_app.config["stream_config"]
 
@@ -29,7 +27,7 @@ def v_settings():
         set_conf_from_post("threads", conf.threads)
         set_conf_from_post("overlay", conf.overlay)
         set_conf_from_post("overlay_url", conf.overlay_url)
-        set_conf_from_post("streaming", "off")
+        set_conf_from_post("streaming", conf.streaming if conf.streaming else "off")
 
     # if starting to stream
     if conf.streaming == "on" and not conf.stream_process_id:

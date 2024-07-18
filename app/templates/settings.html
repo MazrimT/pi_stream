@@ -84,7 +84,7 @@
             <div class="row">
                 <label class="col col-form-label">Overlay URL</label>
                 <div class="col">
-                    <input name="overlay_url" id="overlay_url" class="form-control w-50" type="url" value="{{ conf.overlay_url }}" {% if conf.streaming=="on" %}disabled{% endif %} placeholder="Overlay Url">
+                    <input name="overlay_url" id="overlay_url" class="form-control w-50" type="url" value="{{ conf.overlay_url }}" placeholder="Overlay Url">
                 </div>
             </div>
 
@@ -94,8 +94,7 @@
         </div>
     </div>
     <div class="row-sm">
-        {% if conf.streaming=="off" %}<button type="submit" class="btn btn-primary">Update</button>
-        {% else %}<button type="submit" class="btn btn-primary" disabled>Update</button>{% endif %}
+        <button type="submit" class="btn btn-primary">Update</button>
     </div>
 
 </form>
