@@ -121,6 +121,9 @@ def main():
     time.sleep(1)
     if ARGS.streaming_service == "twitch":
         stream_url = f"rtmp://live.twitch.tv/app/{ARGS.stream_key}"
+
+        #?bandwidthtest=true
+        #live_0000000_xxxxxxxxxxxx?bandwidthtest=true
     elif ARGS.streaming_service == "youtube":
         stream_url = f"rtmp://a.rtmp.youtube.com/live2/{ARGS.stream_key}"
 
@@ -164,7 +167,7 @@ def main():
 
     # setting up encoder
     print("Setting up encoder")
-    encoder = H264Encoder(bitrate=bitrate_int)
+    encoder = H264Encoder(bitrate=bitrate_int, framerate=int(ARGS.framerate), enable_sps_framerate=True)
 
     # with -c copy have to lock the audio_samplerate to 44100, 22050 or 11025, youtube gets sad when it's not 44100
     print("Setting up ffmpeg output")

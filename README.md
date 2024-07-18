@@ -6,13 +6,7 @@ The idea behind this application is to set up on a raspberry pi with a pi camera
 
 
 TODO:
-* get it running on a zero 2 w
-* if stream fails for some reason exit the subprocess and set config back to "off".
-    * this happens now if it's closed and when server starts, but not if it fails.
-* make it clearer in settings page that we're streaming maybe button to start/stop?
-* set up something that will get a new overlay image from internet source every 10 seconds.
-    * save image as app/static/images/overlay.png so stream picks it up automagically.
-    * don't lock the setting if streaming so it can be changed on the fly.
+    * real logging instead of prints
 
 
 # prerequisites

@@ -49,7 +49,7 @@
             </div>
 
             <div class="row">
-                <label class="col col-form-label">Bitrate</label>
+                <label class="col col-form-label">Bitrate (bps)</label>
                 <div class="col">
                     <select class="form-select form-select-m w-50" name="bitrate" id="bitrate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: auto" {% if conf.streaming=="on" %}disabled{% endif %}>
                         {% for bitrate in options.bitrates %}
@@ -115,5 +115,75 @@
             <a type="button" class="btn btn-secondary" href="{{ url_for('logout.logout') }}">Log out</a>
         </div>
     </div>
+</div>
+<br>
+
+<div class="container">
+    <div class="row">
+        Recomended bitrates
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                Bitrate/Fps
+            </div>
+        </div>
+        <div class="col">
+            <div class="row">
+                Youtube
+            </div>
+        </div>
+        <div class="col">
+            <div class="row">
+                Twitch
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            1080/60
+        </div>
+        <div class="col">
+            12000k
+        </div>
+        <div class="col">
+            6000k
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            1080/30
+        </div>
+        <div class="col">
+            10000k
+        </div>
+        <div class="col">
+            4500k
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            720/60
+        </div>
+        <div class="col">
+            6000k
+        </div>
+        <div class="col">
+            4500k
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            720/30
+        </div>
+        <div class="col">
+           4000k
+        </div>
+        <div class="col">
+            3000k
+        </div>
+    </div>
+
+
 </div>
 {% endblock %}
