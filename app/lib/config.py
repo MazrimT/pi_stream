@@ -4,9 +4,9 @@ import tomlkit
 
 
 class Config(object):
-    def __init__(self, app_path):
-        self.app_path = app_path
-        self.config_file = f"{app_path}/config/config.toml"
+    def __init__(self):
+        self.app_path = Path(__file__).parent.parent.as_posix()
+        self.config_file = Path(__file__).parent.joinpath("../config/config.toml").resolve().as_posix()
 
         self._data = self._load_config()
 

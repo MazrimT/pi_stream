@@ -94,8 +94,8 @@
         </div>
     </div>
     <div class="row-sm">
-        <br>
-        <button type="submit" class="btn btn-primary">Update</button>
+        {% if conf.streaming=="off" %}<button type="submit" class="btn btn-primary">Update</button>
+        {% else %}<button type="submit" class="btn btn-primary" disabled>Update</button>{% endif %}
     </div>
 
 </form>

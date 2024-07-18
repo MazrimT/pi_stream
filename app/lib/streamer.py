@@ -4,11 +4,11 @@ from picamera2.encoders import H264Encoder
 from picamera2.outputs import FfmpegOutput
 from picamera2 import Picamera2, MappedArray
 import time
-import os
 from libcamera import controls
 import threading
 import numpy as np
 from PIL import Image as im
+from pathlib import Path
 
 
 def get_args():
@@ -93,9 +93,7 @@ def update_overlay():
 
         overlay_image = im.open(OVERLAY_IMAGE_PATH).convert('RGBA')
 
-        resize_overlay = True if overlay_image.width > WIDTH or overlay_image.height > HEIGHT else False
-
-        if resize_overlay:
+        if overlay_image.width > WIDTH or overlay_image.height > HEIGHT:
             overlay_width = WIDTH if overlay_image.width > WIDTH else overlay_image.width
             overlay_height = HEIGHT if overlay_image.height > HEIGHT else overlay_image.height
             overlay_image = overlay_image.resize(overlay_width, overlay_height)
@@ -182,10 +180,12 @@ def main():
         pass
     finally:
         print("Safely stopping stream, please wait")
-        STOP_OVERLAY_UPDATE_THREAD = True
-        update_overlay_thread.join()
         picam2.stop_recording()
         picam2.close()
+        print("Stopping update thread, please wait")
+        STOP_OVERLAY_UPDATE_THREAD = True
+        update_overlay_thread.join()
+
 
 
 ARGS = get_args()
@@ -193,9 +193,7 @@ WIDTH = int(ARGS.resolution.split("x")[0])
 HEIGHT = int(ARGS.resolution.split("x")[1])
 
 # overlay variables
-OVERLAY_IMAGE_PATH = (
-    os.path.dirname(os.path.realpath(__file__)) + "/../static/images/overlay.png"
-)
+OVERLAY_IMAGE_PATH = Path(__file__).parent.joinpath("/../static/images/current_overlay.png").resolve().as_posix()
 OVERLAY_IMAGE = None
 OVERLAY_ALPHA = None
 OVERLAY_UPDATE_DELAY = 10

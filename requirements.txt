@@ -4,3 +4,4 @@ tomlkit
 flask-login
 python-dotenv
 pillow
+Flask-APScheduler
