@@ -15,7 +15,7 @@ resolution = "1280x720"
 framerate = "30"
 
 ## encoder  bitrate
-bitrate = "6800k"
+bitrate = "6000k"
 
 ## threads for ffmpeg
 threads = "2"
