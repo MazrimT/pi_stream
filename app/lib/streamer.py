@@ -91,7 +91,12 @@ def update_overlay():
         if STOP_OVERLAY_UPDATE_THREAD:
             break
 
-        overlay_image = im.open(OVERLAY_IMAGE_PATH).convert('RGBA')
+        try:
+            overlay_image = im.open(OVERLAY_IMAGE_PATH).convert('RGBA')
+        except Exception as e:
+            print(f"Could not read image: {e}")
+            print("Using default overlay instead")
+            overlay_image = im.open(DEFAULT_OVERLAY_IMAGE_PATH).convert('RGBA')
 
         if overlay_image.width > WIDTH or overlay_image.height > HEIGHT:
             overlay_width = WIDTH if overlay_image.width > WIDTH else overlay_image.width
@@ -194,6 +199,7 @@ HEIGHT = int(ARGS.resolution.split("x")[1])
 
 # overlay variables
 OVERLAY_IMAGE_PATH = Path(__file__).parent.parent.joinpath("static/images/current_overlay.png").as_posix()
+DEFAULT_OVERLAY_IMAGE_PATH = Path(__file__).parent.parent.joinpath("static/images/default_overlay.png").as_posix()
 OVERLAY_IMAGE = None
 OVERLAY_ALPHA = None
 OVERLAY_UPDATE_DELAY = 10
